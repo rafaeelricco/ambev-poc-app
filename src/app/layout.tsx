@@ -3,31 +3,35 @@ import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 
 export const metadata: Metadata = {
-   metadataBase: new URL(`https://${process.env.VERCEL_URL}`),
-   title: 'Leilão Mais | Gerencie seus leilões com facilidade',
+   title: 'InspireIP - Registro de Propriedade Intelectual em Blockchain.',
    description:
-      'Sistema completo para gestão de leilões automotivos. Organize, gerencie e realize leilões de forma eficiente e transparente através da plataforma Pátio Mais.',
-   authors: [{ name: 'Pátio Mais' }],
+      'Com a Inspire, você pode registrar e patentear sua propriedade intelectual com a tecnologia blockchain de forma rápida e segura.',
    keywords: [
-      'leilão automotivo',
-      'gestão de leilões',
-      'leilão de veículos',
-      'pátio mais',
-      'sistema de leilões',
-      'leilão online',
-      'gestão de pátio'
+      'propriedade intelectual',
+      'blockchain',
+      'registro de marca',
+      'registro de patente',
+      'direitos autorais',
+      'segurança',
+      'segredos comerciais',
+      'registro'
    ],
    openGraph: {
-      title: 'Leilão Mais | Módulo de Leilões do Pátio Mais',
+      title: 'InspireIP - Registro de Propriedade Intelectual em Blockchain.',
       description:
-         'Sistema completo para gestão de leilões automotivos. Organize, gerencie e realize leilões de forma eficiente e transparente.',
+         'Com a Inspire, você pode registrar e patentear sua propriedade intelectual com a tecnologia blockchain de forma rápida e segura.',
+      images: [`${process.env.NEXT_PUBLIC_APP_URL}/svgs/logo/logo-inspire.svg`],
       type: 'website'
    },
    twitter: {
       card: 'summary_large_image',
-      title: 'Leilão Mais | Módulo de Leilões do Pátio Mais',
+      title: 'InspireIP - Registro de Propriedade Intelectual em Blockchain.',
       description:
-         'Sistema completo para gestão de leilões automotivos. Organize, gerencie e realize leilões de forma eficiente e transparente.'
+         'Com a Inspire, você pode registrar e patentear sua propriedade intelectual com a tecnologia blockchain de forma rápida e segura.',
+      images: [`${process.env.NEXT_PUBLIC_APP_URL}/svgs/logo/logo-inspire.svg`]
+   },
+   alternates: {
+      canonical: process.env.NEXT_PUBLIC_APP_URL
    }
 }
 
@@ -94,7 +98,7 @@ export default function RootLayout({
          <body className="antialiased bg-background-default dark:bg-dark-background-default">
             <ThemeProvider
                attribute="class"
-               defaultTheme="system"
+               defaultTheme="light"
                enableSystem
                disableTransitionOnChange
             >

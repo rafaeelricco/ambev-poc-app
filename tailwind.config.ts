@@ -19,121 +19,41 @@ const config: Config = {
             }
          },
          colors: {
-            primary: {
-               default: '#1057E1',
-               light: '#4179E7',
-               contrast: '#FAFAFA'
-            },
-            secondary: {
-               default: '#19B26B',
-               light: '#61D8A1',
-               contrast: '#121212'
-            },
-            error: {
-               default: '#D32F2F',
-               light: '#EF5350',
-               contrast: '#FAFAFA'
-            },
-            warning: {
-               default: '#EF6C00',
-               light: '#FF9800',
-               contrast: '#FAFAFA'
-            },
-            info: {
-               default: '#0288D1',
-               light: '#03A9F4',
-               contrast: '#FAFAFA'
-            },
-            success: {
-               default: '#19B26B',
-               light: '#4DE89D',
-               contrast: '#FAFAFA'
-            },
-            common: {
+            neutral: {
+               lightStroke: '#DBDBDB',
+               black: '#2F2F2F',
+               gray: '#6D6D6D',
                white: '#FAFAFA',
-               black: '#121212'
+               lightGray: '#9D9D9D'
             },
-            divider: '#0000001F',
-            text: {
-               primary: '#121212',
-               secondary: '#757575',
-               disabled: '#E0E0E0'
+            primary: {
+               default: '#725AC2',
+               light: '#9D8BDB',
+               dark: '#6142C5',
+               background: '#ECE7FF'
             },
-            action: {
-               active: '#1212128F',
-               hover: '#1212120A',
-               selected: '#0000001F',
-               disabled: '#12121261',
-               disabledBg: '#1212121F',
-               focus: '#1212121F'
+            yellow: {
+               default: '#F5C24C',
+               light: '#FADD77',
+               dark: '#EFC14C'
+            },
+            darkPurple: {
+               default: '#292347',
+               light: '#3F365C',
+               dark: '#140935'
+            },
+            blue: {
+               default: '#65ACE6',
+               light: '#90C6F2',
+               dark: '#6BA0DE',
+               background: '#EAFEFF'
+            },
+            green: {
+               default: '#059C3D',
+               hover: '#23BD5C'
             },
             background: {
-               default: '#FAFAFA',
-               paper: '#FAFAFA'
-            },
-            dark: {
-               primary: {
-                  default: '#19B26B',
-                  light: '#61D8A1',
-                  contrast: '#121212'
-               },
-               secondary: {
-                  default: '#1057E1',
-                  light: '#4179E7',
-                  contrast: '#FAFAFA'
-               },
-               error: {
-                  default: '#D32F2F',
-                  light: '#EF5350',
-                  contrast: '#FAFAFA'
-               },
-               warning: {
-                  default: '#EF6C00',
-                  light: '#FF9800',
-                  contrast: '#FAFAFA'
-               },
-               info: {
-                  default: '#0288D1',
-                  light: '#03A9F4',
-                  contrast: '#FAFAFA'
-               },
-               success: {
-                  default: '#19B26B',
-                  light: '#4DE89D',
-                  contrast: '#FAFAFA'
-               },
-               common: {
-                  white: '#FAFAFA',
-                  black: '#121212'
-               },
-               divider: '#0000001F',
-               text: {
-                  primary: '#FAFAFA',
-                  secondary: '#BDBDBD',
-                  disabled: '#E0E0E0'
-               },
-               action: {
-                  active: '#FAFAFA',
-                  hover: '#FAFAFA0A',
-                  selected: '#FFFFFF1F',
-                  disabled: '#FAFAFA61',
-                  disabledBg: '#FAFAFA1F',
-                  focus: '#FAFAFA1F'
-               },
-               background: {
-                  default: '#1C2939',
-                  paper: '#1C2939'
-               }
-            },
-            sidebar: {
-               DEFAULT: 'hsl(var(--sidebar-background))',
-               foreground: 'hsl(var(--sidebar-foreground))',
-               primary: 'hsl(var(--sidebar-primary))',
-               'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-               accent: 'hsl(var(--sidebar-accent))',
-               'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-               border: 'hsl(var(--sidebar-border))',
-               ring: 'hsl(var(--sidebar-ring))'
+               default: '#F3FCFF'
             }
          },
          borderRadius: {
