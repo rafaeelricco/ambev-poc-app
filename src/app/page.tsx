@@ -1,153 +1,280 @@
 'use client'
 
-import {
-   Accordion,
-   AccordionContent,
-   AccordionItem,
-   AccordionTrigger
-} from '@/components/ui/accordion'
+import * as React from 'react'
+
+import { Logo } from '@/components/svgs/logo'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-   Drawer,
-   DrawerClose,
-   DrawerContent,
-   DrawerDescription,
-   DrawerFooter,
-   DrawerHeader,
-   DrawerTitle,
-   DrawerTrigger
-} from '@/components/ui/drawer'
+   Dialog,
+   DialogContent,
+   DialogDescription,
+   DialogHeader,
+   DialogTitle,
+   DialogTrigger
+} from '@/components/ui/dialog'
+import { Dropzone } from '@/components/ui/dropzone'
 import { Input } from '@/components/ui/input'
 import {
-   Select,
-   SelectContent,
-   SelectItem,
-   SelectTrigger
-} from '@/components/ui/select'
-import { Separator } from '@/components/ui/separator'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ThemeSwitch } from '@/components/ui/theme-switcher'
-import {
-   Tooltip,
-   TooltipContent,
-   TooltipProvider,
-   TooltipTrigger
-} from '@/components/ui/tooltip'
+   AlertCircle,
+   AlertTriangle,
+   Bell,
+   CheckCircle,
+   Edit,
+   Eye,
+   Settings,
+   Trash2,
+   User
+} from 'lucide-react'
 
-import React from 'react'
+const BrandVerificationApp = () => {
+   const [isLoading, setIsLoading] = React.useState(false)
+   const [loadingMessage, setLoadingMessage] = React.useState('')
+   const [selectedImage, setSelectedImage] = React.useState<string | null>(null)
+   const [brandName, setBrandName] = React.useState('')
 
-export default function Home() {
+   const brands = [
+      {
+         id: 1,
+         name: 'Marca A',
+         type: 'Nominativa',
+         status: 'healthy',
+         lastCheck: '2024-03-19',
+         conflicts: []
+      },
+      {
+         id: 2,
+         name: 'Marca B',
+         type: 'Mista',
+         status: 'similar',
+         lastCheck: '2024-03-19',
+         conflicts: ['Conflito de texto: 80% similaridade']
+      },
+      {
+         id: 3,
+         name: 'Marca C',
+         type: 'Figurativa',
+         status: 'identical',
+         lastCheck: '2024-03-19',
+         conflicts: ['Conflito de imagem: marca idêntica encontrada']
+      }
+   ]
+
+   const getStatusInfo = (status: string) => {
+      switch (status) {
+         case 'healthy':
+            return {
+               icon: <CheckCircle className="w-5 h-5 text-green-500" />,
+               label: 'Sem colisões',
+               badgeColor: 'bg-green-100 text-green-500'
+            }
+         case 'similar':
+            return {
+               icon: <AlertTriangle className="w-5 h-5 text-[#F5C24C]" />,
+               label: 'Possíveis colisões',
+               badgeColor: 'bg-yellow-100 text-[#F5C24C]'
+            }
+         case 'identical':
+            return {
+               icon: <AlertCircle className="w-5 h-5 text-red-500" />,
+               label: 'Colisão detectada',
+               badgeColor: 'bg-red-100 text-red-500'
+            }
+         default:
+            return {
+               icon: null,
+               label: 'Não verificado',
+               badgeColor: 'bg-gray-100 text-gray-500'
+            }
+      }
+   }
+
+   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0]
+      if (file) {
+         setSelectedImage(URL.createObjectURL(file))
+      }
+   }
+
+   const simulateVerification = async () => {
+      setIsLoading(true)
+      const messages = [
+         'Convertendo imagem...',
+         'Verificando similaridade na base nacional...',
+         'Registrando em blockchain...',
+         'Quase lá...'
+      ]
+
+      for (const message of messages) {
+         setLoadingMessage(message)
+         await new Promise((resolve) => setTimeout(resolve, 1500))
+      }
+
+      setIsLoading(false)
+      setLoadingMessage('')
+   }
+
    return (
       <React.Fragment>
-         <div className="m-2 rounded-md p-2 border space-y-4 border-primary-default border-dashed">
-            <ThemeSwitch />
-         </div>
-         <div className="m-2 rounded-md p-2 border space-y-4 border-primary-default border-dashed">
-            <TooltipProvider>
-               <Tooltip>
-                  <TooltipTrigger>Hover</TooltipTrigger>
-                  <TooltipContent>
-                     <p className="text-sm text-white">Add to library</p>
-                  </TooltipContent>
-               </Tooltip>
-            </TooltipProvider>
-         </div>
-         <div className="m-2 rounded-md p-2 border space-y-4 border-primary-default border-dashed">
-            <Drawer direction="right">
-               <DrawerTrigger>Open</DrawerTrigger>
-               <DrawerContent className="max-w-xl bg-white fixed w-[40rem] h-screen overflow-y-scroll overflow-x-hidden flex flex-col top-0 right-0 z-[1000] py-12 2xl:py-14 px-12 focus:outline-none">
-                  <DrawerHeader>
-                     <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-                     <DrawerDescription>
-                        This action cannot be undone.
-                     </DrawerDescription>
-                  </DrawerHeader>
-                  <DrawerFooter>
-                     <Button>Submit</Button>
-                     <DrawerClose>
-                        <Button variant="outline">Cancel</Button>
-                     </DrawerClose>
-                  </DrawerFooter>
-               </DrawerContent>
-            </Drawer>
-         </div>
-         <div className="m-2 rounded-md p-2 border space-y-4 border-primary-default border-dashed">
-            <div>
-               <div className="space-y-1">
-                  <h4 className="text-sm font-medium leading-none">Leilão Mais</h4>
-                  <p className="text-sm text-muted-foreground">
-                     Sistema completo para gestão de leilões automotivos.
-                  </p>
-               </div>
-               <Separator className="my-4" />
-               <div className="flex h-5 items-center space-x-4 text-sm">
-                  <div>Início</div>
-                  <Separator orientation="vertical" />
-                  <div>Sobre</div>
-                  <Separator orientation="vertical" />
-                  <div>Contato</div>
-               </div>
-            </div>
-         </div>
-         <div className="m-2 rounded-md p-2 border space-y-4 border-primary-default border-dashed">
-            <Tabs defaultValue="account" className="w-[400px]">
-               <TabsList>
-                  <TabsTrigger value="account">Account</TabsTrigger>
-                  <TabsTrigger value="password">Password</TabsTrigger>
-               </TabsList>
-               <TabsContent value="account">
-                  Make changes to your account here.
-               </TabsContent>
-               <TabsContent value="password">Change your password here.</TabsContent>
-            </Tabs>
-         </div>
-         <div className="m-2 rounded-md p-2 border space-y-4 border-primary-default border-dashed">
-            <Checkbox label="Sem Termo de Apreensão" />
-         </div>
-         <div className="m-2 rounded-md p-2 border space-y-4 border-primary-default border-dashed">
-            <Select>
-               <SelectTrigger hideIcon className="w-fit border-none p-0">
-                  <Button asChild variant="ghost">
-                     <div className="flex !flex-row items-center gap-2">
-                        <span>Filtrar</span>
-                        <span className="material-symbols-outlined text-[1.5rem]">
-                           filter_alt
-                        </span>
+         <div className="min-h-screen bg-[#F3FCFF]">
+            <nav className="w-full bg-white border-b border-[#DBDBDB] px-4 py-2">
+               <div className="container flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                     <Logo className="w-32 h-8" />
+                  </div>
+
+                  <div className="flex items-center space-x-6">
+                     <button className="p-2 hover:bg-[#ECE7FF] rounded-full transition-colors relative">
+                        <Bell className="w-5 h-5 text-[#6D6D6D]" />
+                        <span className="absolute top-1 right-1 w-2 h-2 bg-[#F5C24C] rounded-full"></span>
+                     </button>
+                     <button className="p-2 hover:bg-[#ECE7FF] rounded-full transition-colors">
+                        <Settings className="w-5 h-5 text-[#6D6D6D]" />
+                     </button>
+                     <div className="flex items-center space-x-3 pl-6 border-l border-[#DBDBDB]">
+                        <div className="w-8 h-8 rounded-full bg-[#ECE7FF] flex items-center justify-center">
+                           <User className="w-5 h-5 text-[#725AC2]" />
+                        </div>
+                        <div className="hidden md:block">
+                           <p className="text-sm font-medium text-[#2F2F2F]">
+                              John Doe
+                           </p>
+                           <p className="text-xs text-[#9D9D9D]">Administrador</p>
+                        </div>
                      </div>
-                  </Button>
-               </SelectTrigger>
-               <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
-               </SelectContent>
-            </Select>
+                  </div>
+               </div>
+            </nav>
+
+            <main className="container px-4 py-8">
+               <Card className="mb-8">
+                  <CardHeader>
+                     <CardTitle>Verificar nova marca</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                     <div className="grid md:grid-cols-2 gap-8">
+                        <Dropzone
+                           onDropFiles={(files) => {
+                              console.log(files)
+                           }}
+                        />
+
+                        <div className="flex flex-col space-y-4">
+                           <div>
+                              <label className="text-sm font-medium text-[#2F2F2F] mb-1 block">
+                                 Nome da Marca
+                              </label>
+                              <Input
+                                 value={brandName}
+                                 onChange={(e) => setBrandName(e.target.value)}
+                                 placeholder="Digite o nome da marca"
+                                 className="w-full"
+                              />
+                           </div>
+                           <Button
+                              onClick={simulateVerification}
+                              disabled={isLoading || !selectedImage || !brandName}
+                              className="bg-[#725AC2] hover:bg-[#6142C5] text-white"
+                           >
+                              {isLoading ? loadingMessage : 'Verificar Marca'}
+                           </Button>
+                        </div>
+                     </div>
+                  </CardContent>
+               </Card>
+               <Card>
+                  <CardHeader>
+                     <CardTitle>Marcas monitoradas</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                     <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                           <thead className="bg-gray-50">
+                              <tr>
+                                 <th className="px-4 py-3 text-left font-medium text-gray-600">
+                                    Marca
+                                 </th>
+                                 <th className="px-4 py-3 text-left font-medium text-gray-600">
+                                    Tipo
+                                 </th>
+                                 <th className="px-4 py-3 text-left font-medium text-gray-600">
+                                    Status
+                                 </th>
+                                 <th className="px-4 py-3 text-left font-medium text-gray-600">
+                                    Última Verificação
+                                 </th>
+                                 <th className="px-4 py-3 text-right font-medium text-gray-600">
+                                    Ações
+                                 </th>
+                              </tr>
+                           </thead>
+                           <tbody className="divide-y divide-gray-200">
+                              {brands.map((brand) => {
+                                 const statusInfo = getStatusInfo(brand.status)
+
+                                 return (
+                                    <tr
+                                       key={brand.id}
+                                       className="bg-white hover:bg-gray-50"
+                                    >
+                                       <td className="px-4 py-3 font-medium text-gray-900">
+                                          {brand.name}
+                                       </td>
+                                       <td className="px-4 py-3 text-gray-600">
+                                          {brand.type}
+                                       </td>
+                                       <td className="px-4 py-3">
+                                          <div className="flex items-center space-x-2">
+                                             <Badge
+                                                className={statusInfo.badgeColor}
+                                             >
+                                                {statusInfo.label}
+                                             </Badge>
+                                          </div>
+                                       </td>
+                                       <td className="px-4 py-3 text-gray-600">
+                                          {new Date(
+                                             brand.lastCheck
+                                          ).toLocaleDateString()}
+                                       </td>
+                                       <td className="px-4 py-3">
+                                          <div className="flex justify-end space-x-2">
+                                             <button className="p-1 hover:bg-gray-100 rounded-full">
+                                                <Eye className="w-4 h-4 text-[#725AC2]" />
+                                             </button>
+                                             <button className="p-1 hover:bg-gray-100 rounded-full">
+                                                <Edit className="w-4 h-4 text-[#725AC2]" />
+                                             </button>
+                                             <button className="p-1 hover:bg-gray-100 rounded-full">
+                                                <Trash2 className="w-4 h-4 text-red-500" />
+                                             </button>
+                                          </div>
+                                       </td>
+                                    </tr>
+                                 )
+                              })}
+                           </tbody>
+                        </table>
+                     </div>
+                  </CardContent>
+               </Card>
+            </main>
          </div>
-         <div className="m-2 rounded-md p-2 border border-primary-default border-dashed space-y-2">
-            <Button variant="destructive">Click me</Button>
-            <Button variant="default">Click me</Button>
-            <Button variant="secondary">Click me</Button>
-            <Button variant="outline">Click me</Button>
-            <Button variant="ghost">Click me</Button>
-            <Button variant="link">Click me</Button>
-            <Button loading>Click me</Button>
-         </div>
-         <div className="m-2 rounded-md p-2 border space-y-4 border-primary-default border-dashed">
-            <Input label="E-mail" placeholder="Placeholder" type="text" />
-            <Input label="Label" placeholder="Placeholder" type="password" />
-            <Input label="Email" type="email" />
-            <Input label="Email" type="email" error="Error" />
-            <Input label="Email" type="email" disabled />
-         </div>
-         <div className="m-2 rounded-md p-2 border space-y-4 border-primary-default border-dashed">
-            <Accordion type="single" collapsible>
-               <AccordionItem value="item-1">
-                  <AccordionTrigger>Pré-leilão</AccordionTrigger>
-                  <AccordionContent>Opções de pré-leilão</AccordionContent>
-               </AccordionItem>
-            </Accordion>
-         </div>
+         <Dialog>
+            <DialogTrigger>Open</DialogTrigger>
+            <DialogContent>
+               <DialogHeader>
+                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                  <DialogDescription>
+                     This action cannot be undone. This will permanently delete your
+                     account and remove your data from our servers.
+                  </DialogDescription>
+               </DialogHeader>
+            </DialogContent>
+         </Dialog>
       </React.Fragment>
    )
 }
+
+export default BrandVerificationApp
