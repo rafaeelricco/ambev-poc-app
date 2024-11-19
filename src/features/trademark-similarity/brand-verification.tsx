@@ -6,14 +6,7 @@ import { Logo } from '@/components/svgs/logo'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-   Dialog,
-   DialogContent,
-   DialogDescription,
-   DialogHeader,
-   DialogTitle,
-   DialogTrigger
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Dropzone } from '@/components/ui/dropzone'
 import { Input } from '@/components/ui/input'
 import {
@@ -27,6 +20,7 @@ import {
    Trash2,
    User
 } from 'lucide-react'
+import LoadingAnimation from './components/loading-animation'
 
 const BrandVerification: React.FC = () => {
    const [isLoading, setIsLoading] = React.useState(false)
@@ -114,6 +108,22 @@ const BrandVerification: React.FC = () => {
       setIsLoading(false)
       setLoadingMessage('')
    }
+
+   const [loading, setLoading] = React.useState(true)
+   const messages = [
+      'Conectando ao servidor...',
+      'Carregando dados...',
+      'Preparando interface...',
+      'Quase lá...'
+   ]
+
+   React.useEffect(() => {
+      const timer = setTimeout(() => {
+         setLoading(false)
+      }, 15000)
+
+      return () => clearTimeout(timer)
+   }, [])
 
    return (
       <React.Fragment>
@@ -261,20 +271,32 @@ const BrandVerification: React.FC = () => {
                </Card>
             </main>
          </div>
-         <Dialog>
+         <Dialog open={true}>
             <DialogTrigger>Open</DialogTrigger>
             <DialogContent>
-               <DialogHeader>
-                  <DialogTitle>Are you absolutely sure?</DialogTitle>
-                  <DialogDescription>
-                     This action cannot be undone. This will permanently delete your
-                     account and remove your data from our servers.
-                  </DialogDescription>
-               </DialogHeader>
+               <LoadingAnimation messages={messages_test} duration={30000} />
             </DialogContent>
          </Dialog>
       </React.Fragment>
    )
 }
+
+const messages_test = [
+   'Processando algoritmos de similaridade fonética e visual...',
+   'Consultando base de dados do INPI em tempo real...',
+   'Aplicando métricas de distintividade conforme Art. 124 da LPI...',
+   'Analisando colidência em classes correlatas NCL(12)...',
+   'Executando verificação de anterioridade marcária...',
+   'Processando parâmetros de confusão e associação indevida...',
+   'Realizando análise semântica conforme Resolução 248/2019...',
+   'Verificando possibilidade de confusão, associação ou diluição...',
+   'Aplicando jurisprudência do INPI à análise comparativa...',
+   'Avaliando grau de distintividade e força da marca...',
+   'Executando análise gráfica, fonética e ideológica...',
+   'Processando índices de semelhança conforme Manual de Marcas...',
+   'Verificando coexistência com marcas de alto renome...',
+   'Aplicando critérios da Convenção da União de Paris...',
+   'Realizando busca de impedimentos legais Art. 124 a 126...'
+]
 
 export default BrandVerification

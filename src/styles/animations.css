@@ -1,0 +1,62 @@
+/* styles/animations.css */
+
+#loader-wrapper {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   z-index: 10000000;
+}
+
+#page {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: rgba(0, 0, 0, 0.8);
+   width: 100%;
+   height: 100%;
+   transition: opacity 1s;
+}
+
+#phrase_box {
+   width: 260px;
+   height: 150px;
+   overflow: hidden;
+   position: relative;
+}
+
+#phrase_box::before,
+#phrase_box::after {
+   content: '';
+   position: absolute;
+   left: 0;
+   right: 0;
+   height: 30px;
+   z-index: 1;
+   pointer-events: none;
+}
+
+#phrase_box::before {
+   top: 0;
+   background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.95) 0%,
+      rgba(0, 0, 0, 0) 100%
+   );
+}
+
+#phrase_box::after {
+   bottom: 0;
+   background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.95) 0%,
+      rgba(0, 0, 0, 0) 100%
+   );
+}
+
+.loaded #page {
+   opacity: 0;
+   visibility: hidden;
+   transition: opacity 0.3s ease-out;
+}
