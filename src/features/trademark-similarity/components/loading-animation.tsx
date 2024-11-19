@@ -44,7 +44,7 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({
                   Math.min(1 - (currentY - colorChangeBoundary + 15) / 30, 1),
                   0
                )
-               check.circle.setAttribute('fill', `rgba(255, 255, 255, ${alpha})`)
+               check.circle.setAttribute('fill', `rgba(114, 90, 194, ${alpha})`)
                const checkColor = [
                   Math.round(255 * (1 - alpha) + 120 * alpha),
                   Math.round(255 * (1 - alpha) + 154 * alpha)
@@ -113,7 +113,7 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({
                                  <polygon
                                     id={`loadingCheckSVG-${index}`}
                                     points="21.661,7.643 13.396,19.328 9.429,15.361 7.075,17.714 13.745,24.384 24.345,9.708"
-                                    fill="rgba(255,255,255,1)"
+                                    fill="whi"
                                  />
                                  <path
                                     d="M16,0C7.163,0,0,7.163,0,16s7.163,16,16,16s16-7.163,16-16S24.837,0,16,0z M16,30C8.28,30,2,23.72,2,16C2,8.28,8.28,2,16,2 c7.72,0,14,6.28,14,14C30,23.72,23.72,30,16,30z"

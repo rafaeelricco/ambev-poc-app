@@ -1,5 +1,6 @@
 'use client'
 
+import * as DialogPrimitive from '@radix-ui/react-dialog'
 import * as React from 'react'
 
 import { Logo } from '@/components/svgs/logo'
@@ -18,7 +19,8 @@ import {
    Eye,
    Settings,
    Trash2,
-   User
+   User,
+   X
 } from 'lucide-react'
 import LoadingAnimation from './components/loading-animation'
 
@@ -274,6 +276,13 @@ const BrandVerification: React.FC = () => {
          <Dialog open={true}>
             <DialogTrigger>Open</DialogTrigger>
             <DialogContent>
+               <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-semibold">Verificando marca</h3>
+                  <DialogPrimitive.Close className="rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-neutral-100 data-[state=open]:text-neutral-500 dark:ring-offset-neutral-950 dark:focus:ring-neutral-300 dark:data-[state=open]:bg-neutral-800 dark:data-[state=open]:text-neutral-400">
+                     <X className="h-6 w-6" />
+                     <span className="sr-only">Close</span>
+                  </DialogPrimitive.Close>
+               </div>
                <LoadingAnimation messages={messages_test} duration={30000} />
             </DialogContent>
          </Dialog>
