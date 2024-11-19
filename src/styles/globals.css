@@ -1,0 +1,173 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+   :root {
+      --radius: 0.5rem;
+      --sidebar-background: 0 0% 98%;
+      --sidebar-foreground: 240 5.3% 26.1%;
+      --sidebar-primary: 240 5.9% 10%;
+      --sidebar-primary-foreground: 0 0% 98%;
+      --sidebar-accent: 240 4.8% 95.9%;
+      --sidebar-accent-foreground: 240 5.9% 10%;
+      --sidebar-border: 220 13% 91%;
+      --sidebar-ring: 217.2 91.2% 59.8%;
+   }
+   .dark {
+      --sidebar-background: 240 5.9% 10%;
+      --sidebar-foreground: 240 4.8% 95.9%;
+      --sidebar-primary: 224.3 76.3% 48%;
+      --sidebar-primary-foreground: 0 0% 100%;
+      --sidebar-accent: 240 3.7% 15.9%;
+      --sidebar-accent-foreground: 240 4.8% 95.9%;
+      --sidebar-border: 240 3.7% 15.9%;
+      --sidebar-ring: 217.2 91.2% 59.8%;
+   }
+}
+
+@layer components {
+   .loader {
+      border-top: 2px solid currentColor;
+      border-left: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      border-right: 2px solid transparent;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+   }
+
+   .animation-spin {
+      animation: spin 0.75s linear infinite;
+   }
+
+   @keyframes spin {
+      from {
+         transform: translate(-50%, -50%) rotate(0deg);
+      }
+      to {
+         transform: translate(-50%, -50%) rotate(360deg);
+      }
+   }
+}
+
+body {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+
+body * {
+   box-sizing: inherit;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   scroll-behavior: smooth;
+   -webkit-overflow-scrolling: touch;
+}
+
+* {
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+}
+
+body *:after,
+body *:before {
+   padding: 0;
+   margin: 0;
+   box-sizing: inherit;
+}
+
+button {
+   outline: inherit;
+}
+
+body {
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   scroll-behavior: smooth;
+   overflow-x: hidden;
+   -webkit-overflow-scrolling: touch;
+}
+
+body,
+input,
+textarea {
+   input[type='number']::-webkit-inner-spin-,
+   input[type='number']::-webkit-outer-spin- {
+      -webkit-appearance: none;
+      margin: 0;
+   }
+
+   input[type='number'] {
+      -moz-appearance: textfield !important;
+      appearance: textfield !important;
+   }
+
+   outline: inherit;
+}
+
+input:-webkit-autofill::first-line {
+   background-color: transparent;
+}
+
+input:-webkit-autofill {
+   -webkit-box-shadow: 0 0 0 30px transparent inset;
+   -webkit-text-fill-color: var(--background-paper);
+   transition: background-color 5000s ease-in-out 0s;
+}
+
+input:-webkit-autofill + label {
+   top: 0px !important;
+   transform: scale(0.75) !important;
+   transition-property: all !important;
+   transition-duration: 200ms !important;
+   transition-timing-function: ease-out !important;
+}
+
+input:autofill + label {
+   top: -8.5px !important;
+   transform: scale(0.75) !important;
+   transition-property: all !important;
+   transition-duration: 200ms !important;
+   transition-timing-function: ease-out !important;
+}
+
+input {
+   caret-color: var(--primary-default);
+}
+
+::-webkit-scrollbar {
+   width: 0px;
+   z-index: 1;
+
+   &-thumb {
+      cursor: pointer;
+      border-radius: 8px;
+      background: #c5c5c5;
+   }
+}
+
+.material-symbols-outlined {
+   font-weight: 350;
+   user-select: none;
+}
+
+.symbol-xs {
+   font-size: 1rem !important;
+}
+
+.symbol-sm {
+   font-size: 1.25rem !important;
+}
+
+.symbol-md {
+   font-size: 1.5rem !important;
+}
+
+.symbol-lg {
+   font-size: 2rem !important;
+}
+
+.filled {
+   font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
