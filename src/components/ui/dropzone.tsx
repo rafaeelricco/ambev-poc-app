@@ -1,3 +1,4 @@
+'use client'
 import { cn } from '@/src/lib/utils'
 import { CloudUpload } from 'lucide-react'
 import { useDropzone } from 'react-dropzone'
@@ -24,7 +25,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDropFiles }: DropzoneProps) => {
                'border-red-500': isDragReject
             }
          )}
-         {...getRootProps({ isFocused, isDragAccept, isDragReject })}
+         {...getRootProps()}
       >
          <input {...getInputProps()} />
          <div className="flex flex-1 flex-col items-center justify-center">
