@@ -1,3 +1,5 @@
+import * as React from 'react'
+
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { TrademarkSimilarityResponse } from '@/types/trademark-similarity'
@@ -9,7 +11,7 @@ interface BrandAnalysisResultsProps {
 
 const EmptyState = ({ message }: { message: string }) => (
    <div className="flex flex-col items-center justify-center py-8 text-gray-500">
-      <AlertCircle className="w-12 h-12 mb-3 text-gray-400" />
+      <AlertCircle className="w-8 h-8 mb-3 text-gray-400" />
       <p className="text-center">{message}</p>
    </div>
 )
@@ -40,7 +42,7 @@ const BrandAnalysisResults: React.FC<BrandAnalysisResultsProps> = ({ data }) => 
    const hasVisualAnalysis = data.visual_analysis.length > 0
 
    return (
-      <div className="min-h-screen">
+      <React.Fragment>
          <div className="max-w-7xl mx-auto">
             <p className="text-[#6D6D6D] mb-6">
                Análise realizada em {new Date().toLocaleDateString()}
@@ -188,7 +190,7 @@ const BrandAnalysisResults: React.FC<BrandAnalysisResultsProps> = ({ data }) => 
                </CardContent>
             </Card>
          </div>
-      </div>
+      </React.Fragment>
    )
 }
 
