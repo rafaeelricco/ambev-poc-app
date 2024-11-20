@@ -44,7 +44,6 @@ const DialogContent = React.forwardRef<
          )}
          {...props}
       >
-         <DialogTitle className="opacity-0">content</DialogTitle>
          {children}
       </DialogPrimitive.Content>
    </DialogPortal>

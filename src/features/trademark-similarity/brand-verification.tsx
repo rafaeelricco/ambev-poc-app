@@ -206,7 +206,7 @@ const BrandVerification: React.FC = () => {
    return (
       <React.Fragment>
          <div className="min-h-screen bg-[#F3FCFF]">
-            <nav className="w-full bg-white border-b border-[#DBDBDB] px-4 py-2">
+            <nav className="w-full bg-white border-b border-[#DBDBDB] px-4 py-4">
                <div className="container flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                      <Logo className="w-32 h-8" />
