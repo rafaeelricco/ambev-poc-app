@@ -410,7 +410,6 @@ const BrandVerification: React.FC = () => {
                      <CardTitle>Marcas monitoradas</CardTitle>
                   </CardHeader>
                   <CardContent>
-                     {/* Versão Desktop */}
                      <div className="hidden md:block overflow-x-auto">
                         <table className="w-full text-sm">
                            <thead className="bg-gray-50">
@@ -480,8 +479,6 @@ const BrandVerification: React.FC = () => {
                            </tbody>
                         </table>
                      </div>
-
-                     {/* Versão Mobile */}
                      <div className="md:hidden space-y-4">
                         {brands.map((brand) => {
                            const statusInfo = getStatusInfo(brand.status)
