@@ -410,7 +410,8 @@ const BrandVerification: React.FC = () => {
                      <CardTitle>Marcas monitoradas</CardTitle>
                   </CardHeader>
                   <CardContent>
-                     <div className="overflow-x-auto">
+                     {/* Versão Desktop */}
+                     <div className="hidden md:block overflow-x-auto">
                         <table className="w-full text-sm">
                            <thead className="bg-gray-50">
                               <tr>
@@ -478,6 +479,64 @@ const BrandVerification: React.FC = () => {
                               })}
                            </tbody>
                         </table>
+                     </div>
+
+                     {/* Versão Mobile */}
+                     <div className="md:hidden space-y-4">
+                        {brands.map((brand) => {
+                           const statusInfo = getStatusInfo(brand.status)
+
+                           return (
+                              <div
+                                 key={brand.id}
+                                 className="bg-white rounded-lg shadow p-4 space-y-3"
+                              >
+                                 <div className="flex justify-between items-start">
+                                    <div>
+                                       <h3 className="font-medium text-gray-900">
+                                          {brand.name}
+                                       </h3>
+                                       <p className="text-sm text-gray-600">
+                                          {brand.type}
+                                       </p>
+                                    </div>
+                                    <div className="flex gap-2">
+                                       <button className="p-1.5 hover:bg-gray-100 rounded-full">
+                                          <Eye className="w-4 h-4 text-[#725AC2]" />
+                                       </button>
+                                       <button className="p-1.5 hover:bg-gray-100 rounded-full">
+                                          <Edit className="w-4 h-4 text-[#725AC2]" />
+                                       </button>
+                                       <button className="p-1.5 hover:bg-gray-100 rounded-full">
+                                          <Trash2 className="w-4 h-4 text-red-500" />
+                                       </button>
+                                    </div>
+                                 </div>
+
+                                 <div className="flex flex-col gap-2">
+                                    <div className="flex justify-between items-center">
+                                       <span className="text-sm text-gray-600">
+                                          Status:
+                                       </span>
+                                       <Badge className={statusInfo.badgeColor}>
+                                          {statusInfo.label}
+                                       </Badge>
+                                    </div>
+
+                                    <div className="flex justify-between items-center">
+                                       <span className="text-sm text-gray-600">
+                                          Última verificação:
+                                       </span>
+                                       <span className="text-sm">
+                                          {new Date(
+                                             brand.lastCheck
+                                          ).toLocaleDateString()}
+                                       </span>
+                                    </div>
+                                 </div>
+                              </div>
+                           )
+                        })}
                      </div>
                   </CardContent>
                </Card>
