@@ -1,6 +1,7 @@
 import '@/src/styles/globals.css'
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
+import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {
    title: 'InspireIP - Registro de Propriedade Intelectual em Blockchain.',
@@ -96,6 +97,7 @@ export default function RootLayout({
             />
          </head>
          <body className="antialiased bg-background-default dark:bg-dark-background-default">
+            <Toaster />
             <ThemeProvider
                attribute="class"
                defaultTheme="light"

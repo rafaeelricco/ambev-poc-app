@@ -2,14 +2,32 @@
 
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import * as React from 'react'
+import * as z from 'zod'
 
 import { Logo } from '@/components/svgs/logo'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Dropzone } from '@/components/ui/dropzone'
+import {
+   Form,
+   FormControl,
+   FormField,
+   FormItem,
+   FormMessage
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+   Select,
+   SelectContent,
+   SelectItem,
+   SelectTrigger,
+   SelectValue
+} from '@/components/ui/select'
+import { checkTrademarkSimilarity } from '@/features/trademark-similarity/api/trademark-similarity'
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
    AlertCircle,
    AlertTriangle,
@@ -22,18 +40,18 @@ import {
    User,
    X
 } from 'lucide-react'
-import { checkTrademarkSimilarity } from './api/trademark-similarity'
-import LoadingAnimation from './components/loading-animation'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+
+import LoadingAnimation from '@/features/trademark-similarity/components/loading-animation'
 
 const BrandVerification: React.FC = () => {
-   const [isLoading, setIsLoading] = React.useState(false)
-   const [loadingMessage, setLoadingMessage] = React.useState('')
-   const [selectedImage, setSelectedImage] = React.useState<string | null>(null)
-   const [brandName, setBrandName] = React.useState('')
+   const [isLoading, setIsLoading] = React.useState({
+      submit: false
+   })
    const [isModalOpen, setIsModalOpen] = React.useState(false)
-   const [selectedFile, setSelectedFile] = React.useState<File | null>(null)
-
-   const brands = [
+   const [selectedImage, setSelectedImage] = React.useState<string | null>(null)
+   const [brands, setBrands] = React.useState([
       {
          id: 1,
          name: 'Marca A',
@@ -58,7 +76,95 @@ const BrandVerification: React.FC = () => {
          lastCheck: '2024-03-19',
          conflicts: ['Conflito de imagem: marca idêntica encontrada']
       }
-   ]
+   ])
+
+   const form = useForm<TrademarkVerificationForm>({
+      resolver: zodResolver(trademarkVerificationSchema),
+      defaultValues: {
+         business_name: '',
+         business_ncl_classes: [],
+         b64_image: ''
+      }
+   })
+
+   async function onSubmit(data: TrademarkVerificationForm) {
+      try {
+         console.log('Starting trademark verification process...')
+         setIsLoading({ ...isLoading, submit: true })
+         setIsModalOpen(true)
+
+         console.log(
+            'Form data:',
+            JSON.stringify(
+               {
+                  business_name: data.business_name,
+                  business_ncl_classes: data.business_ncl_classes,
+                  imageSize: data.b64_image.length
+               },
+               null,
+               2
+            )
+         )
+
+         const payload = {
+            business_name: data.business_name,
+            business_ncl_classes: data.business_ncl_classes,
+            b64_image: data.b64_image
+         }
+
+         console.log('Sending request to API:', JSON.stringify(payload, null, 2))
+         const result = await checkTrademarkSimilarity(payload)
+         console.log('API Response:', JSON.stringify(result, null, 2))
+
+         // Aqui você pode atualizar o estado das marcas monitoradas com o resultado
+         // setBrands([...brands, novoResultado])
+
+         // Handle success
+         toast.success('Marca verificada com sucesso!', { duration: 10000 })
+
+         console.log('Verification completed successfully')
+         // Reset the form
+         form.reset()
+         setSelectedImage(null)
+      } catch (error) {
+         console.error('Verification failed:', error)
+         console.error('Error details:', error)
+         // Handle error
+         toast.error('Erro ao verificar a marca')
+      } finally {
+         console.log('Cleaning up verification process...')
+         setIsLoading({ ...isLoading, submit: false })
+         setIsModalOpen(false)
+      }
+   }
+
+   const convertToBase64 = (file: File): Promise<string> => {
+      return new Promise((resolve, reject) => {
+         const reader = new FileReader()
+         reader.readAsDataURL(file)
+         reader.onload = () => {
+            const base64String = reader.result as string
+            // Remove the data:image/[type];base64, prefix
+            const finalBase64 = base64String.split(',')[1]
+            resolve(finalBase64)
+         }
+         reader.onerror = (error) => {
+            console.error('Error converting to base64:', error)
+            reject(error)
+         }
+      })
+   }
+
+   const handleDropFiles = async (files: File[]) => {
+      if (files.length > 0) {
+         const file = files[0]
+         const url = URL.createObjectURL(file)
+         setSelectedImage(url)
+
+         const base64Image = await convertToBase64(file)
+         form.setValue('b64_image', base64Image)
+      }
+   }
 
    const getStatusInfo = (status: string) => {
       switch (status) {
@@ -88,112 +194,6 @@ const BrandVerification: React.FC = () => {
             }
       }
    }
-
-   const convertToBase64 = (file: File): Promise<string> => {
-      console.log('Converting file to base64:', file.name, file.type, file.size)
-
-      return new Promise((resolve, reject) => {
-         const reader = new FileReader()
-         reader.readAsDataURL(file)
-         reader.onload = () => {
-            const base64String = reader.result as string
-            console.log('Base64 conversion successful. Length:', base64String.length)
-            // Remove the data:image/[type];base64, prefix
-            const finalBase64 = base64String.split(',')[1]
-            console.log('Cleaned base64 length:', finalBase64.length)
-            resolve(finalBase64)
-         }
-         reader.onerror = (error) => {
-            console.error('Error converting to base64:', error)
-            reject(error)
-         }
-      })
-   }
-
-   const simulateVerification = async () => {
-      try {
-         console.log('Starting verification process...')
-         console.log('Current state:', {
-            brandName,
-            selectedFile: selectedFile?.name,
-            fileSize: selectedFile?.size
-         })
-
-         setIsModalOpen(true)
-         setIsLoading(true)
-         setLoadingMessage('Convertendo imagem...')
-
-         if (!selectedFile || !brandName) {
-            console.error('Missing required fields:', {
-               hasFile: !!selectedFile,
-               hasBrandName: !!brandName
-            })
-            throw new Error('Missing required fields')
-         }
-
-         const base64Image = await convertToBase64(selectedFile)
-         console.log('Image converted successfully')
-
-         const payload = {
-            business_name: brandName,
-            business_ncl_classes: ['25', '35'],
-            b64_image: base64Image
-         }
-         console.log('Sending payload:', {
-            business_name: payload.business_name,
-            business_ncl_classes: payload.business_ncl_classes,
-            b64_image_length: payload.b64_image.length
-         })
-
-         const result = await checkTrademarkSimilarity(payload)
-         console.log('API Response:', result)
-      } catch (error) {
-         console.error('Error during verification:', error)
-         console.error('Error details:', {
-            message: error instanceof Error ? error.message : 'Unknown error',
-            stack: error instanceof Error ? error.stack : undefined
-         })
-      } finally {
-         console.log('Verification process completed')
-         setIsLoading(false)
-         setLoadingMessage('')
-         setIsModalOpen(false)
-      }
-   }
-
-   const handleDropFiles = (files: File[]) => {
-      console.log(
-         'Files dropped:',
-         files.map((f) => ({
-            name: f.name,
-            type: f.type,
-            size: f.size
-         }))
-      )
-
-      if (files.length > 0) {
-         const file = files[0]
-         setSelectedFile(file)
-         const url = URL.createObjectURL(file)
-         setSelectedImage(url)
-         console.log('File processed:', {
-            name: file.name,
-            type: file.type,
-            size: file.size,
-            previewUrl: url
-         })
-      }
-   }
-
-   const [loading, setLoading] = React.useState(true)
-
-   React.useEffect(() => {
-      const timer = setTimeout(() => {
-         setLoading(false)
-      }, 15000)
-
-      return () => clearTimeout(timer)
-   }, [])
 
    React.useEffect(() => {
       return () => {
@@ -242,27 +242,93 @@ const BrandVerification: React.FC = () => {
                   <CardContent>
                      <div className="grid md:grid-cols-2 gap-8">
                         <Dropzone onDropFiles={handleDropFiles} />
-
-                        <div className="flex flex-col space-y-4">
-                           <div>
-                              <label className="text-sm font-medium text-[#2F2F2F] mb-1 block">
-                                 Nome da Marca
-                              </label>
-                              <Input
-                                 value={brandName}
-                                 onChange={(e) => setBrandName(e.target.value)}
-                                 placeholder="Digite o nome da marca"
-                                 className="w-full"
-                              />
-                           </div>
-                           <Button
-                              onClick={simulateVerification}
-                              disabled={isLoading || !selectedImage || !brandName}
-                              className="bg-[#725AC2] hover:bg-[#6142C5] text-white"
+                        <Form {...form}>
+                           <form
+                              onSubmit={form.handleSubmit(onSubmit)}
+                              className="space-y-4"
                            >
-                              {isLoading ? loadingMessage : 'Verificar marca'}
-                           </Button>
-                        </div>
+                              <div className="grid grid-cols-[1fr_200px] gap-4">
+                                 <FormField
+                                    control={form.control}
+                                    name="business_name"
+                                    render={({ field }) => (
+                                       <FormItem>
+                                          <Label className="text-sm font-medium text-[#2F2F2F] mb-1 block">
+                                             Nome da Marca
+                                          </Label>
+                                          <FormControl>
+                                             <Input
+                                                type="text"
+                                                placeholder="Digite o nome da marca"
+                                                className="w-full"
+                                                {...field}
+                                             />
+                                          </FormControl>
+                                          <FormMessage />
+                                       </FormItem>
+                                    )}
+                                 />
+                                 <FormField
+                                    control={form.control}
+                                    name="business_ncl_classes"
+                                    render={({ field }) => (
+                                       <FormItem>
+                                          <Label className="text-sm font-medium text-[#2F2F2F] mb-1 block">
+                                             Tipo de Marca
+                                          </Label>
+                                          <Select
+                                             onValueChange={(value) =>
+                                                field.onChange([value])
+                                             }
+                                             defaultValue={field.value[0]}
+                                          >
+                                             <FormControl>
+                                                <SelectTrigger className="w-[180px]">
+                                                   <SelectValue placeholder="Tipo de marca" />
+                                                </SelectTrigger>
+                                             </FormControl>
+                                             <SelectContent>
+                                                {[
+                                                   {
+                                                      value: 'nominativa',
+                                                      label: 'Nominativa'
+                                                   },
+                                                   {
+                                                      value: 'mista',
+                                                      label: 'Mista'
+                                                   },
+                                                   {
+                                                      value: 'figurativa',
+                                                      label: 'Figurativa'
+                                                   }
+                                                ].map((option) => (
+                                                   <SelectItem
+                                                      key={option.value}
+                                                      value={option.value}
+                                                   >
+                                                      {option.label}
+                                                   </SelectItem>
+                                                ))}
+                                             </SelectContent>
+                                          </Select>
+                                          <FormMessage />
+                                       </FormItem>
+                                    )}
+                                 />
+                              </div>
+                              <div className="grid">
+                                 <Button
+                                    type="submit"
+                                    disabled={isLoading.submit}
+                                    className="bg-[#725AC2] hover:bg-[#6142C5] text-white col-span-2"
+                                 >
+                                    {isLoading.submit
+                                       ? 'Verificando...'
+                                       : 'Verificar Marca'}
+                                 </Button>
+                              </div>
+                           </form>
+                        </Form>
                      </div>
                   </CardContent>
                </Card>
@@ -347,8 +413,10 @@ const BrandVerification: React.FC = () => {
          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogContent>
                <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-semibold">Verificando marca</h3>
-                  <DialogPrimitive.Close className="rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-neutral-100 data-[state=open]:text-neutral-500 dark:ring-offset-neutral-950 dark:focus:ring-neutral-300 dark:data-[state=open]:bg-neutral-800 dark:data-[state=open]:text-neutral-400">
+                  <DialogTitle className="text-2xl font-semibold">
+                     Verificando marca
+                  </DialogTitle>
+                  <DialogPrimitive.Close className="rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 disabled:pointer-events-none">
                      <X className="h-6 w-6" />
                      <span className="sr-only">Close</span>
                   </DialogPrimitive.Close>
@@ -377,5 +445,19 @@ const messages_test = [
    'Aplicando critérios da Convenção da União de Paris...',
    'Realizando busca de impedimentos legais Art. 124 a 126...'
 ]
+
+const trademarkVerificationSchema = z.object({
+   business_name: z.string().min(1, {
+      message: 'O nome da marca é obrigatório'
+   }),
+   business_ncl_classes: z.array(z.string()).min(1, {
+      message: 'Selecione pelo menos uma classe NCL'
+   }),
+   b64_image: z.string().min(1, {
+      message: 'A imagem da marca é obrigatória'
+   })
+})
+
+type TrademarkVerificationForm = z.infer<typeof trademarkVerificationSchema>
 
 export default BrandVerification
