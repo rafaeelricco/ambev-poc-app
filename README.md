@@ -1,12 +1,20 @@
-  <img src="https://res.cloudinary.com/dnqiosdb6/image/upload/v1730922045/Group_2_hl9yb7.png" alt="leilao-mais-admin">
+<div align="center">
+  <img src="https://res.cloudinary.com/dnqiosdb6/image/upload/v1732109257/ppltxwywqextx3xjxidy.png" alt="brand-verify-system">
+</div>
 
 ## Sobre o projeto
 
-O **Leilão Mais** é uma solução abrangente para administração e gerenciamento de leilões, projetada para simplificar e otimizar todos os processos envolvidos no ciclo de vida de um leilão. A plataforma oferece uma experiência intuitiva através de quatro módulos principais que trabalham em harmonia:
+Esta é uma Prova de Conceito (POC) desenvolvida especialmente para a AMBEV, demonstrando as capacidades de um sistema avançado de análise e verificação de marcas. O projeto foi construído para atender às necessidades específicas da AMBEV no processo de proteção e monitoramento de seu extenso portfólio de marcas, incluindo Skol, Brahma, Antarctica, Stella Artois, entre outras.
 
-O Dashboard proporciona uma visão estratégica e em tempo real do status dos leilões. O Módulo de Leilões centraliza toda a gestão de leilões e lotes, incluindo cadastros, edições e geração de documentos. O Módulo de Operações facilita o acompanhamento e execução das transações, enquanto o módulo de Prestação de Leilões garante um controle financeiro eficiente e transparente.
+A plataforma utiliza inteligência artificial para identificar potenciais conflitos entre marcas, oferecendo uma análise abrangente através de diferentes perspectivas:
 
-Com recursos avançados de importação e exportação de dados, gestão de proprietários e arrematantes, e um sistema robusto de acompanhamento de status, o Leilão Mais é a ferramenta ideal para profissionais que buscam eficiência e controle em suas operações de leilão.
+-  Análise de similaridade fonética e visual focada no segmento de bebidas
+-  Verificação de anterioridade marcária no mercado brasileiro
+-  Avaliação de distintividade considerando o portfólio AMBEV
+-  Análise de colidência em classes correlatas ao setor de bebidas
+-  Verificação de conformidade com a legislação brasileira de marcas
+
+Com recursos avançados de processamento de imagem e texto, integração com bases de dados oficiais e um sistema robusto de geração de relatórios, o Brand Verify visa otimizar o processo de proteção das marcas AMBEV no mercado nacional.
 
 ## Configuração do ambiente
 
@@ -66,35 +74,3 @@ Para build de produção:
 ```bash
 pnpm build && pnpm start
 ```
-
-### 4. Testes
-
-**a. Comandos básicos do playwright**
-
-Executar todos os testes:
-
-```bash
-npx playwright test
-```
-
-Executar testes em modo debug:
-
-```bash
-npx playwright test --debug
-```
-
-Executar testes com interface visual:
-
-```bash
-npx playwright test --ui
-```
-
-**b. Linting**
-
-Para executar o linter:
-
-```bash
-pnpm lint
-```
-
-[Saiba mais sobre os comandos do Playwright](https://playwright.dev/docs/test-cli)
