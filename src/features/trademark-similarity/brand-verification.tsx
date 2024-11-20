@@ -7,7 +7,7 @@ import { Logo } from '@/components/svgs/logo'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Dropzone } from '@/components/ui/dropzone'
 import { Input } from '@/components/ui/input'
 import {
@@ -29,6 +29,7 @@ const BrandVerification: React.FC = () => {
    const [loadingMessage, setLoadingMessage] = React.useState('')
    const [selectedImage, setSelectedImage] = React.useState<string | null>(null)
    const [brandName, setBrandName] = React.useState('')
+   const [isModalOpen, setIsModalOpen] = React.useState(false)
 
    const brands = [
       {
@@ -94,6 +95,7 @@ const BrandVerification: React.FC = () => {
    }
 
    const simulateVerification = async () => {
+      setIsModalOpen(true)
       setIsLoading(true)
       const messages = [
          'Convertendo imagem...',
@@ -109,6 +111,7 @@ const BrandVerification: React.FC = () => {
 
       setIsLoading(false)
       setLoadingMessage('')
+      setIsModalOpen(false)
    }
 
    const [loading, setLoading] = React.useState(true)
@@ -126,6 +129,14 @@ const BrandVerification: React.FC = () => {
 
       return () => clearTimeout(timer)
    }, [])
+
+   React.useEffect(() => {
+      return () => {
+         if (selectedImage) {
+            URL.revokeObjectURL(selectedImage)
+         }
+      }
+   }, [selectedImage])
 
    return (
       <React.Fragment>
@@ -168,7 +179,11 @@ const BrandVerification: React.FC = () => {
                      <div className="grid md:grid-cols-2 gap-8">
                         <Dropzone
                            onDropFiles={(files) => {
-                              console.log(files)
+                              if (files.length > 0 && files[0] instanceof Blob) {
+                                 const url = URL.createObjectURL(files[0])
+                                 setSelectedImage(url)
+                                 return () => URL.revokeObjectURL(url)
+                              }
                            }}
                         />
 
@@ -189,7 +204,7 @@ const BrandVerification: React.FC = () => {
                               disabled={isLoading || !selectedImage || !brandName}
                               className="bg-[#725AC2] hover:bg-[#6142C5] text-white"
                            >
-                              {isLoading ? loadingMessage : 'Verificar Marca'}
+                              {isLoading ? loadingMessage : 'Verificar marca'}
                            </Button>
                         </div>
                      </div>
@@ -273,8 +288,7 @@ const BrandVerification: React.FC = () => {
                </Card>
             </main>
          </div>
-         <Dialog open={true}>
-            <DialogTrigger>Open</DialogTrigger>
+         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogContent>
                <div className="flex items-center justify-between">
                   <h3 className="text-2xl font-semibold">Verificando marca</h3>

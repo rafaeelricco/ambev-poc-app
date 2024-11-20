@@ -49,10 +49,7 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({
                   Math.round(255 * (1 - alpha) + 120 * alpha),
                   Math.round(255 * (1 - alpha) + 154 * alpha)
                ]
-               check.check.setAttribute(
-                  'fill',
-                  `rgba(255, ${checkColor[0]}, ${checkColor[1]}, 1)`
-               )
+               check.check.setAttribute('fill', `white`)
             }
          })
 
@@ -93,8 +90,7 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({
                                  fill="black"
                                  x={50}
                                  y={30 + index * 50}
-                                 fontSize={18}
-                                 fontFamily="Arial"
+                                 className="text-base font-medium"
                               >
                                  {message}...
                               </text>
