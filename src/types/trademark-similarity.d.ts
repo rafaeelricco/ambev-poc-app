@@ -1,7 +1,7 @@
 export interface TrademarkSimilarityInput {
    business_name: string
    business_ncl_classes: string[]
-   b64_image: string
+   b64_image: string | undefined
 }
 
 export interface TrademarkSimilarityResponse {

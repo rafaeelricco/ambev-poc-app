@@ -40,9 +40,6 @@ import { toast } from 'sonner'
 import LoadingAnimation from '@/features/trademark-similarity/components/loading-animation'
 
 const BrandVerification: React.FC = () => {
-   const [isLoading, setIsLoading] = React.useState({
-      submit: false
-   })
    const [isModalOpen, setIsModalOpen] = React.useState(false)
    const [selectedImage, setSelectedImage] = React.useState<string | null>(null)
    const [nclClassTemp, setNclClassTemp] = React.useState('')
@@ -81,7 +78,6 @@ const BrandVerification: React.FC = () => {
          b64_image: ''
       }
    })
-   console.log('watching form', form.watch())
 
    const handleNclKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
@@ -121,7 +117,6 @@ const BrandVerification: React.FC = () => {
    async function onSubmit(data: TrademarkVerificationForm) {
       try {
          console.log('Starting trademark verification process...')
-         setIsLoading({ ...isLoading, submit: true })
          setIsModalOpen(true)
 
          console.log(
@@ -130,7 +125,7 @@ const BrandVerification: React.FC = () => {
                {
                   business_name: data.business_name,
                   business_ncl_classes: data.business_ncl_classes,
-                  imageSize: data.b64_image.length
+                  imageSize: data.b64_image?.length
                },
                null,
                2
@@ -164,7 +159,6 @@ const BrandVerification: React.FC = () => {
          toast.error('Erro ao verificar a marca')
       } finally {
          console.log('Cleaning up verification process...')
-         setIsLoading({ ...isLoading, submit: false })
          setIsModalOpen(false)
       }
    }
@@ -175,7 +169,6 @@ const BrandVerification: React.FC = () => {
          reader.readAsDataURL(file)
          reader.onload = () => {
             const base64String = reader.result as string
-            // Remove the data:image/[type];base64, prefix
             const finalBase64 = base64String.split(',')[1]
             resolve(finalBase64)
          }
@@ -362,12 +355,9 @@ const BrandVerification: React.FC = () => {
                               <div className="grid">
                                  <Button
                                     type="submit"
-                                    disabled={isLoading.submit}
                                     className="bg-[#725AC2] hover:bg-[#6142C5] text-white col-span-2"
                                  >
-                                    {isLoading.submit
-                                       ? 'Verificando...'
-                                       : 'Verificar Marca'}
+                                    Verificar marca
                                  </Button>
                               </div>
                            </form>
@@ -494,11 +484,9 @@ const trademarkVerificationSchema = z.object({
       message: 'O nome da marca é obrigatório'
    }),
    business_ncl_classes: z.array(z.string()).min(1, {
-      message: 'Selecione pelo menos uma classe NCL'
+      message: 'Informe pelo menos uma classe NCL'
    }),
-   b64_image: z.string().min(1, {
-      message: 'A imagem da marca é obrigatória'
-   })
+   b64_image: z.string().optional()
 })
 
 type TrademarkVerificationForm = z.infer<typeof trademarkVerificationSchema>

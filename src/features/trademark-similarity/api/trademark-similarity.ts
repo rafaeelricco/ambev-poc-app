@@ -14,7 +14,7 @@ export async function checkTrademarkSimilarity(
       console.log('Request payload:', {
          business_name: data.business_name,
          business_ncl_classes: data.business_ncl_classes,
-         b64_image_length: data.b64_image.length
+         b64_image_length: data.b64_image?.length
       })
 
       const response = await fetch(
