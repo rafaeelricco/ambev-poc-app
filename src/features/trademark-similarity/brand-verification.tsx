@@ -289,7 +289,7 @@ const BrandVerification: React.FC = () => {
                         </div>
                         <div className="hidden md:block">
                            <p className="text-sm font-medium text-[#2F2F2F]">
-                              John Doe
+                              Caroline Nunes
                            </p>
                            <p className="text-xs text-[#9D9D9D]">Administrador</p>
                         </div>
