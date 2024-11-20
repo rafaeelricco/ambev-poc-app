@@ -28,6 +28,7 @@ import {
    CheckCircle,
    Edit,
    Eye,
+   PlusCircle,
    Settings,
    Trash2,
    User,
@@ -44,6 +45,7 @@ const BrandVerification: React.FC = () => {
    })
    const [isModalOpen, setIsModalOpen] = React.useState(false)
    const [selectedImage, setSelectedImage] = React.useState<string | null>(null)
+   const [nclClassTemp, setNclClassTemp] = React.useState('')
    const [brands, setBrands] = React.useState([
       {
          id: 1,
@@ -79,6 +81,42 @@ const BrandVerification: React.FC = () => {
          b64_image: ''
       }
    })
+   console.log('watching form', form.watch())
+
+   const handleNclKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+         e.preventDefault()
+         addNclClass()
+      }
+   }
+
+   const addNclClass = () => {
+      if (nclClassTemp && nclClassTemp.trim() !== '') {
+         const newClasses = nclClassTemp
+            .split(',')
+            .map((cls) => cls.trim())
+            .filter(
+               (cls) =>
+                  cls !== '' && !form.getValues('business_ncl_classes').includes(cls)
+            )
+
+         if (newClasses.length > 0) {
+            form.setValue('business_ncl_classes', [
+               ...(form.getValues('business_ncl_classes') || []),
+               ...newClasses
+            ])
+         }
+         setNclClassTemp('')
+      }
+   }
+
+   const removeNclClass = (indexToRemove: number) => {
+      const currentClasses = form.getValues('business_ncl_classes')
+      form.setValue(
+         'business_ncl_classes',
+         currentClasses.filter((_, index) => index !== indexToRemove)
+      )
+   }
 
    async function onSubmit(data: TrademarkVerificationForm) {
       try {
@@ -270,12 +308,51 @@ const BrandVerification: React.FC = () => {
                                              Classe da marca
                                           </Label>
                                           <FormControl>
-                                             <Input
-                                                type="text"
-                                                placeholder="Digite a classe da marca"
-                                                className="w-full"
-                                                {...field}
-                                             />
+                                             <div className="space-y-2">
+                                                <div className="flex">
+                                                   <Input
+                                                      type="text"
+                                                      placeholder="Digite a classe da marca"
+                                                      className="w-full"
+                                                      value={nclClassTemp}
+                                                      onChange={(e) =>
+                                                         setNclClassTemp(
+                                                            e.target.value
+                                                         )
+                                                      }
+                                                      onKeyDown={handleNclKeyDown}
+                                                   />
+                                                   <Button
+                                                      type="button"
+                                                      variant="outline"
+                                                      className="ml-2 px-2 py-0 border-[#725AC2] hover:bg-[#ECE7FF] flex items-center gap-1"
+                                                      onClick={addNclClass}
+                                                   >
+                                                      <PlusCircle className="w-3 text-[#725AC2]" />
+                                                      <span className="font-semibold text-xs text-[#725AC2]">
+                                                         Adicionar
+                                                      </span>
+                                                   </Button>
+                                                </div>
+                                                <div className="flex flex-wrap gap-1">
+                                                   {field.value.map((cls, index) => (
+                                                      <div
+                                                         key={index}
+                                                         className="border rounded-md border-[#DBDBDB] flex items-center px-2 py-1 bg-white"
+                                                      >
+                                                         <X
+                                                            className="w-4 h-4 text-[#6D6D6D] hover:text-red-500 cursor-pointer mr-1"
+                                                            onClick={() =>
+                                                               removeNclClass(index)
+                                                            }
+                                                         />
+                                                         <span className="text-sm text-[#2F2F2F]">
+                                                            {cls}
+                                                         </span>
+                                                      </div>
+                                                   ))}
+                                                </div>
+                                             </div>
                                           </FormControl>
                                           <FormMessage />
                                        </FormItem>
