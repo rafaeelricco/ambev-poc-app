@@ -5,7 +5,10 @@ import { useDropzone } from 'react-dropzone'
 
 import React from 'react'
 
-const Dropzone: React.FC<DropzoneProps> = ({ onDropFiles }: DropzoneProps) => {
+const Dropzone: React.FC<DropzoneProps> = ({
+   maxSize,
+   onDropFiles
+}: DropzoneProps) => {
    const [files, setFiles] = React.useState<File[]>([])
 
    const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
@@ -42,7 +45,11 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDropFiles }: DropzoneProps) => {
                   </span>{' '}
                   ou arraste e solte
                </p>
-               <p className="text-xs text-gray-500">Tamanho máximo de 2GB.</p>
+               {maxSize && (
+                  <p className="text-xs text-gray-500">
+                     Tamanho máximo de {formatSize(maxSize)}.
+                  </p>
+               )}
             </div>
          ) : (
             <div className="flex flex-col items-center justify-center gap-4">
@@ -52,7 +59,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDropFiles }: DropzoneProps) => {
                      {files[0].name}
                   </span>
                   <span className="text-sm text-gray-500">
-                     ({(files[0].size / 1024).toFixed(2)} KB)
+                     ({formatSize(files[0].size)})
                   </span>
                   <Eye
                      className="h-5 w-5 cursor-pointer hover:text-primary-default"
@@ -76,7 +83,20 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDropFiles }: DropzoneProps) => {
    )
 }
 
+const formatSize = (size: number): string => {
+   if (size < 1024) {
+      return size + ' bytes'
+   } else if (size < Math.pow(1024, 2)) {
+      return (size / 1024).toFixed(1) + 'KB'
+   } else if (size < Math.pow(1024, 3)) {
+      return (size / Math.pow(1024, 2)).toFixed(1) + 'MB'
+   } else {
+      return (size / Math.pow(1024, 3)).toFixed(1) + 'GB'
+   }
+}
+
 type DropzoneProps = {
+   maxSize?: number
    onDropFiles: (files: File[]) => void
 }
 

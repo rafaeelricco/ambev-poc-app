@@ -492,7 +492,17 @@ const messages_test = [
    'Processando índices de semelhança conforme Manual de Marcas...',
    'Verificando coexistência com marcas de alto renome...',
    'Aplicando critérios da Convenção da União de Paris...',
-   'Realizando busca de impedimentos legais Art. 124 a 126...'
+   'Realizando busca de impedimentos legais Art. 124 a 126...',
+   'Analisando elementos nominativos e figurativos da marca...',
+   'Verificando registros internacionais via Protocolo de Madri...',
+   'Processando análise de distintividade conforme Art. 122 da LPI...',
+   'Consultando base de marcas notoriamente conhecidas...',
+   'Aplicando algoritmos de decomposição fonética NCL(12)...',
+   'Verificando registros de marca em segmentos mercadológicos afins...',
+   'Analisando potencial de confusão junto ao público consumidor...',
+   'Processando métricas de similaridade conforme Resolução 249/2019...',
+   'Executando verificação de conflitos com indicações geográficas...',
+   'Realizando análise de colidência em mercados relacionados...'
 ]
 
 const trademarkVerificationSchema = z.object({
