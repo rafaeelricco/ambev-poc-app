@@ -41,6 +41,19 @@ import { toast } from 'sonner'
 import LoadingAnimation from '@/features/trademark-similarity/components/loading-animation'
 import BrandAnalysisResults from './brand-analysis-result'
 
+interface Brand {
+   id: number
+   name: string
+   type: 'Nominativa' | 'Mista' | 'Figurativa'
+   status: 'healthy' | 'similar' | 'identical'
+   lastCheck: string
+   processNumber: string
+   validUntil: string
+   specialStatus?: string
+   nclClass: string
+   conflicts: string[]
+}
+
 const BrandVerification: React.FC = () => {
    const [isModalOpen, setIsModalOpen] = React.useState(false)
    const [showResults, setShowResults] = React.useState(false)
@@ -48,30 +61,51 @@ const BrandVerification: React.FC = () => {
    const [nclClassTemp, setNclClassTemp] = React.useState('')
    const [apiResponse, setApiResponse] =
       React.useState<TrademarkSimilarityResponse | null>(null)
-   const [brands] = React.useState([
+   const [brands] = React.useState<Brand[]>([
+      //   {
+      //      id: 1,
+      //      name: 'BRAHMA',
+      //      type: 'Nominativa',
+      //      status: 'healthy',
+      //      lastCheck: '2024-03-19',
+      //      processNumber: '002208504',
+      //      validUntil: '2028-12-28',
+      //      specialStatus: 'Marca de Alto Renome (válido até 28/03/2027)',
+      //      nclClass: '32',
+      //      conflicts: []
+      //   },
       {
-         id: 1,
-         name: 'Marca A',
-         type: 'Nominativa',
+         id: 2,
+         name: 'BRAHMA',
+         type: 'Mista',
          status: 'healthy',
          lastCheck: '2024-03-19',
+         processNumber: '829097732',
+         validUntil: '2030-02-17',
+         nclClass: '32',
          conflicts: []
       },
       {
-         id: 2,
-         name: 'Marca B',
+         id: 3,
+         name: 'Antártica Soda Limonada',
          type: 'Mista',
-         status: 'similar',
+         status: 'healthy',
          lastCheck: '2024-03-19',
-         conflicts: ['Conflito de texto: 80% similaridade']
+         processNumber: '922577340',
+         validUntil: '2032-03-03',
+         nclClass: '32',
+         conflicts: []
       },
       {
-         id: 3,
-         name: 'Marca C',
-         type: 'Figurativa',
-         status: 'identical',
+         id: 4,
+         name: 'Sukita guaraná',
+         type: 'Mista',
+         status: 'healthy',
          lastCheck: '2024-03-19',
-         conflicts: ['Conflito de imagem: marca idêntica encontrada']
+         processNumber: '922316287',
+         validUntil: '2032-01-25',
+         nclClass: '32',
+         conflicts: []
       }
    ])
 
@@ -376,7 +410,7 @@ const BrandVerification: React.FC = () => {
                      <CardTitle>Marcas monitoradas</CardTitle>
                   </CardHeader>
                   <CardContent>
-                     <div className="overflow-x-auto">
+                     <div className="hidden md:block overflow-x-auto">
                         <table className="w-full text-sm">
                            <thead className="bg-gray-50">
                               <tr>
@@ -444,6 +478,62 @@ const BrandVerification: React.FC = () => {
                               })}
                            </tbody>
                         </table>
+                     </div>
+                     <div className="md:hidden space-y-4">
+                        {brands.map((brand) => {
+                           const statusInfo = getStatusInfo(brand.status)
+
+                           return (
+                              <div
+                                 key={brand.id}
+                                 className="bg-white rounded-lg shadow p-4 space-y-3"
+                              >
+                                 <div className="flex justify-between items-start">
+                                    <div>
+                                       <h3 className="font-medium text-gray-900">
+                                          {brand.name}
+                                       </h3>
+                                       <p className="text-sm text-gray-600">
+                                          {brand.type}
+                                       </p>
+                                    </div>
+                                    <div className="flex gap-2">
+                                       <button className="p-1.5 hover:bg-gray-100 rounded-full">
+                                          <Eye className="w-4 h-4 text-[#725AC2]" />
+                                       </button>
+                                       <button className="p-1.5 hover:bg-gray-100 rounded-full">
+                                          <Edit className="w-4 h-4 text-[#725AC2]" />
+                                       </button>
+                                       <button className="p-1.5 hover:bg-gray-100 rounded-full">
+                                          <Trash2 className="w-4 h-4 text-red-500" />
+                                       </button>
+                                    </div>
+                                 </div>
+
+                                 <div className="flex flex-col gap-2">
+                                    <div className="flex justify-between items-center">
+                                       <span className="text-sm text-gray-600">
+                                          Status:
+                                       </span>
+                                       <Badge className={statusInfo.badgeColor}>
+                                          {statusInfo.label}
+                                       </Badge>
+                                    </div>
+
+                                    <div className="flex justify-between items-center">
+                                       <span className="text-sm text-gray-600">
+                                          Última verificação:
+                                       </span>
+                                       <span className="text-sm">
+                                          {new Date(
+                                             brand.lastCheck
+                                          ).toLocaleDateString()}
+                                       </span>
+                                    </div>
+                                 </div>
+                              </div>
+                           )
+                        })}
                      </div>
                   </CardContent>
                </Card>
