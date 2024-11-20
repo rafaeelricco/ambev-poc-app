@@ -23,7 +23,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDropFiles }: DropzoneProps) => {
    return (
       <div
          className={cn(
-            'flex h-auto w-full flex-1 border-spacing-1 flex-col items-center justify-center rounded-lg border border-dashed border-white-500 bg-transparent p-8 transition-all duration-300',
+            'flex h-auto w-full flex-1 border-spacing-1 flex-col items-center justify-center rounded-lg border border-dashed border-white-500 bg-transparent p-4 transition-all duration-300',
             {
                'border-primary-default': isFocused || files.length > 0,
                'border-green-500': isDragAccept,
@@ -35,16 +35,14 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDropFiles }: DropzoneProps) => {
          <input {...getInputProps()} />
          {files.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center">
-               <CloudUpload className="my-2 h-8 w-8 text-black-500" />
-               <p className="font-sf-pro-display text-base">
-                  <span className="cursor-default font-sf-pro-display font-semibold underline">
+               <CloudUpload className="my-2 h-6 w-6 text-black-500" />
+               <p className="text-base">
+                  <span className="cursor-default font-semibold underline">
                      Clique para enviar
                   </span>{' '}
                   ou arraste e solte
                </p>
-               <p className="font-sf-pro-display text-sm text-white-800">
-                  Tamanho máximo de 2GB.
-               </p>
+               <p className="text-xs text-gray-500">Tamanho máximo de 2GB.</p>
             </div>
          ) : (
             <div className="flex flex-col items-center justify-center gap-4">

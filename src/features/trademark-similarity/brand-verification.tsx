@@ -115,12 +115,6 @@ const BrandVerification: React.FC = () => {
    }
 
    const [loading, setLoading] = React.useState(true)
-   const messages = [
-      'Conectando ao servidor...',
-      'Carregando dados...',
-      'Preparando interface...',
-      'Quase lá...'
-   ]
 
    React.useEffect(() => {
       const timer = setTimeout(() => {
@@ -146,7 +140,6 @@ const BrandVerification: React.FC = () => {
                   <div className="flex items-center space-x-2">
                      <Logo className="w-32 h-8" />
                   </div>
-
                   <div className="flex items-center space-x-6">
                      <button className="p-2 hover:bg-[#ECE7FF] rounded-full transition-colors relative">
                         <Bell className="w-5 h-5 text-[#6D6D6D]" />
