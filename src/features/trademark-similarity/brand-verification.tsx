@@ -20,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { checkTrademarkSimilarity } from '@/features/trademark-similarity/api/trademark-similarity'
+import { TrademarkSimilarityResponse } from '@/src/types/trademark-similarity'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
    AlertCircle,
@@ -38,11 +39,15 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import LoadingAnimation from '@/features/trademark-similarity/components/loading-animation'
+import BrandAnalysisResults from './brand-analysis-result'
 
 const BrandVerification: React.FC = () => {
    const [isModalOpen, setIsModalOpen] = React.useState(false)
+   const [showResults, setShowResults] = React.useState(false)
    const [selectedImage, setSelectedImage] = React.useState<string | null>(null)
    const [nclClassTemp, setNclClassTemp] = React.useState('')
+   const [apiResponse, setApiResponse] =
+      React.useState<TrademarkSimilarityResponse | null>(null)
    const [brands, setBrands] = React.useState([
       {
          id: 1,
@@ -118,6 +123,7 @@ const BrandVerification: React.FC = () => {
       try {
          console.log('Starting trademark verification process...')
          setIsModalOpen(true)
+         setShowResults(false)
 
          console.log(
             'Form data:',
@@ -142,11 +148,11 @@ const BrandVerification: React.FC = () => {
          const result = await checkTrademarkSimilarity(payload)
          console.log('API Response:', JSON.stringify(result, null, 2))
 
-         // Aqui você pode atualizar o estado das marcas monitoradas com o resultado
-         // setBrands([...brands, novoResultado])
+         setApiResponse(result)
 
          // Handle success
          toast.success('Marca verificada com sucesso!', { duration: 10000 })
+         setShowResults(true)
 
          console.log('Verification completed successfully')
          // Reset the form
@@ -445,16 +451,26 @@ const BrandVerification: React.FC = () => {
          </div>
          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogContent>
+               <DialogTitle className="text-2xl font-semibold">
+                  Verificando marca
+               </DialogTitle>
+               <LoadingAnimation messages={messages_test} duration={30000} />
+            </DialogContent>
+         </Dialog>
+         <Dialog open={showResults} onOpenChange={setShowResults}>
+            <DialogContent>
                <div className="flex items-center justify-between">
                   <DialogTitle className="text-2xl font-semibold">
-                     Verificando marca
+                     Resultado da verificação
                   </DialogTitle>
                   <DialogPrimitive.Close className="rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 disabled:pointer-events-none">
                      <X className="h-6 w-6" />
                      <span className="sr-only">Close</span>
                   </DialogPrimitive.Close>
                </div>
-               <LoadingAnimation messages={messages_test} duration={30000} />
+               <div>
+                  {apiResponse && <BrandAnalysisResults data={apiResponse} />}
+               </div>
             </DialogContent>
          </Dialog>
       </React.Fragment>
