@@ -19,13 +19,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-   Select,
-   SelectContent,
-   SelectItem,
-   SelectTrigger,
-   SelectValue
-} from '@/components/ui/select'
 import { checkTrademarkSimilarity } from '@/features/trademark-similarity/api/trademark-similarity'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -247,7 +240,7 @@ const BrandVerification: React.FC = () => {
                               onSubmit={form.handleSubmit(onSubmit)}
                               className="space-y-4"
                            >
-                              <div className="grid grid-cols-[1fr_200px] gap-4">
+                              <div className="grid gap-4">
                                  <FormField
                                     control={form.control}
                                     name="business_name"
@@ -274,43 +267,16 @@ const BrandVerification: React.FC = () => {
                                     render={({ field }) => (
                                        <FormItem>
                                           <Label className="text-sm font-medium text-[#2F2F2F] mb-1 block">
-                                             Tipo de Marca
+                                             Classe da marca
                                           </Label>
-                                          <Select
-                                             onValueChange={(value) =>
-                                                field.onChange([value])
-                                             }
-                                             defaultValue={field.value[0]}
-                                          >
-                                             <FormControl>
-                                                <SelectTrigger className="w-[180px]">
-                                                   <SelectValue placeholder="Tipo de marca" />
-                                                </SelectTrigger>
-                                             </FormControl>
-                                             <SelectContent>
-                                                {[
-                                                   {
-                                                      value: 'nominativa',
-                                                      label: 'Nominativa'
-                                                   },
-                                                   {
-                                                      value: 'mista',
-                                                      label: 'Mista'
-                                                   },
-                                                   {
-                                                      value: 'figurativa',
-                                                      label: 'Figurativa'
-                                                   }
-                                                ].map((option) => (
-                                                   <SelectItem
-                                                      key={option.value}
-                                                      value={option.value}
-                                                   >
-                                                      {option.label}
-                                                   </SelectItem>
-                                                ))}
-                                             </SelectContent>
-                                          </Select>
+                                          <FormControl>
+                                             <Input
+                                                type="text"
+                                                placeholder="Digite a classe da marca"
+                                                className="w-full"
+                                                {...field}
+                                             />
+                                          </FormControl>
                                           <FormMessage />
                                        </FormItem>
                                     )}
