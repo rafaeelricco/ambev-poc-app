@@ -45,10 +45,6 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({
                   0
                )
                check.circle.setAttribute('fill', `rgba(114, 90, 194, ${alpha})`)
-               const checkColor = [
-                  Math.round(255 * (1 - alpha) + 120 * alpha),
-                  Math.round(255 * (1 - alpha) + 154 * alpha)
-               ]
                check.check.setAttribute('fill', `white`)
             }
          })

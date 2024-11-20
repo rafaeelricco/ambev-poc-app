@@ -48,7 +48,7 @@ const BrandVerification: React.FC = () => {
    const [nclClassTemp, setNclClassTemp] = React.useState('')
    const [apiResponse, setApiResponse] =
       React.useState<TrademarkSimilarityResponse | null>(null)
-   const [brands, setBrands] = React.useState([
+   const [brands] = React.useState([
       {
          id: 1,
          name: 'Marca A',
