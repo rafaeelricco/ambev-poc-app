@@ -14,7 +14,7 @@ A plataforma utiliza inteligência artificial para identificar potenciais confli
 -  Análise de colidência em classes correlatas ao setor de bebidas
 -  Verificação de conformidade com a legislação brasileira de marcas
 
-Com recursos avançados de processamento de imagem e texto, integração com bases de dados oficiais e um sistema robusto de geração de relatórios, o Brand Verify visa otimizar o processo de proteção das marcas AMBEV no mercado nacional.
+Com recursos avançados de processamento de imagem e texto, integração com bases de dados oficiais e um sistema robusto de geração de relatórios, o projeto visa otimizar o processo de proteção das marcas AMBEV no mercado nacional.
 
 ## Configuração do ambiente
 
