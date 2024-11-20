@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { TrademarkSimilarityResponse } from '@/types/trademark-similarity'
-import { AlertCircle, FileText, Image } from 'lucide-react'
+import { FileText, Image } from 'lucide-react'
 
 interface BrandAnalysisResultsProps {
    data: TrademarkSimilarityResponse
@@ -11,7 +11,6 @@ interface BrandAnalysisResultsProps {
 
 const EmptyState = ({ message }: { message: string }) => (
    <div className="flex flex-col items-center justify-center py-8 text-gray-500">
-      <AlertCircle className="w-8 h-8 mb-3 text-gray-400" />
       <p className="text-center">{message}</p>
    </div>
 )
@@ -104,7 +103,7 @@ const BrandAnalysisResults: React.FC<BrandAnalysisResultsProps> = ({ data }) => 
                                  key={index}
                                  className={`rounded-lg p-4 ${warningStyle.bg}`}
                               >
-                                 <div className="flex items-start justify-between mb-4">
+                                 <div className="flex items-start justify-between mb-2">
                                     <div className="flex items-center gap-3">
                                        {warningStyle.icon}
                                        <div>
@@ -158,7 +157,7 @@ const BrandAnalysisResults: React.FC<BrandAnalysisResultsProps> = ({ data }) => 
                                  </div>
                                  <div className="flex items-start gap-6">
                                     <div className="flex-grow">
-                                       <div className="flex items-center gap-3 mb-4">
+                                       <div className="flex items-center gap-3 mb-2">
                                           {warningStyle.icon}
                                           <div>
                                              <Badge className={warningStyle.badge}>

@@ -1,7 +1,8 @@
 import '@/src/styles/globals.css'
+
+import { Toaster } from '@/components/ui/sonner'
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
-import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {
    title: 'InspireIP - Registro de Propriedade Intelectual em Blockchain.',
