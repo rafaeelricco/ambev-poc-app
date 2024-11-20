@@ -502,7 +502,11 @@ const messages_test = [
    'Analisando potencial de confusão junto ao público consumidor...',
    'Processando métricas de similaridade conforme Resolução 249/2019...',
    'Executando verificação de conflitos com indicações geográficas...',
-   'Realizando análise de colidência em mercados relacionados...'
+   'Realizando análise de colidência em mercados relacionados...',
+   'Aplicando inteligência artificial para análise preditiva...',
+   'Consolidando resultados da verificação completa...',
+   'Gerando relatório detalhado de similaridade...',
+   'Registrando resultado da análise em blockchain...'
 ]
 
 const trademarkVerificationSchema = z.object({
