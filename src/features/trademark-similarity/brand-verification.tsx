@@ -22,6 +22,7 @@ import {
    User,
    X
 } from 'lucide-react'
+import { checkTrademarkSimilarity } from './api/trademark-similarity'
 import LoadingAnimation from './components/loading-animation'
 
 const BrandVerification: React.FC = () => {
@@ -30,6 +31,7 @@ const BrandVerification: React.FC = () => {
    const [selectedImage, setSelectedImage] = React.useState<string | null>(null)
    const [brandName, setBrandName] = React.useState('')
    const [isModalOpen, setIsModalOpen] = React.useState(false)
+   const [selectedFile, setSelectedFile] = React.useState<File | null>(null)
 
    const brands = [
       {
@@ -87,31 +89,100 @@ const BrandVerification: React.FC = () => {
       }
    }
 
-   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0]
-      if (file) {
-         setSelectedImage(URL.createObjectURL(file))
-      }
+   const convertToBase64 = (file: File): Promise<string> => {
+      console.log('Converting file to base64:', file.name, file.type, file.size)
+
+      return new Promise((resolve, reject) => {
+         const reader = new FileReader()
+         reader.readAsDataURL(file)
+         reader.onload = () => {
+            const base64String = reader.result as string
+            console.log('Base64 conversion successful. Length:', base64String.length)
+            // Remove the data:image/[type];base64, prefix
+            const finalBase64 = base64String.split(',')[1]
+            console.log('Cleaned base64 length:', finalBase64.length)
+            resolve(finalBase64)
+         }
+         reader.onerror = (error) => {
+            console.error('Error converting to base64:', error)
+            reject(error)
+         }
+      })
    }
 
    const simulateVerification = async () => {
-      setIsModalOpen(true)
-      setIsLoading(true)
-      const messages = [
-         'Convertendo imagem...',
-         'Verificando similaridade na base nacional...',
-         'Registrando em blockchain...',
-         'Quase lá...'
-      ]
+      try {
+         console.log('Starting verification process...')
+         console.log('Current state:', {
+            brandName,
+            selectedFile: selectedFile?.name,
+            fileSize: selectedFile?.size
+         })
 
-      for (const message of messages) {
-         setLoadingMessage(message)
-         await new Promise((resolve) => setTimeout(resolve, 1500))
+         setIsModalOpen(true)
+         setIsLoading(true)
+         setLoadingMessage('Convertendo imagem...')
+
+         if (!selectedFile || !brandName) {
+            console.error('Missing required fields:', {
+               hasFile: !!selectedFile,
+               hasBrandName: !!brandName
+            })
+            throw new Error('Missing required fields')
+         }
+
+         const base64Image = await convertToBase64(selectedFile)
+         console.log('Image converted successfully')
+
+         const payload = {
+            business_name: brandName,
+            business_ncl_classes: ['25', '35'],
+            b64_image: base64Image
+         }
+         console.log('Sending payload:', {
+            business_name: payload.business_name,
+            business_ncl_classes: payload.business_ncl_classes,
+            b64_image_length: payload.b64_image.length
+         })
+
+         const result = await checkTrademarkSimilarity(payload)
+         console.log('API Response:', result)
+      } catch (error) {
+         console.error('Error during verification:', error)
+         console.error('Error details:', {
+            message: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : undefined
+         })
+      } finally {
+         console.log('Verification process completed')
+         setIsLoading(false)
+         setLoadingMessage('')
+         setIsModalOpen(false)
       }
+   }
 
-      setIsLoading(false)
-      setLoadingMessage('')
-      setIsModalOpen(false)
+   const handleDropFiles = (files: File[]) => {
+      console.log(
+         'Files dropped:',
+         files.map((f) => ({
+            name: f.name,
+            type: f.type,
+            size: f.size
+         }))
+      )
+
+      if (files.length > 0) {
+         const file = files[0]
+         setSelectedFile(file)
+         const url = URL.createObjectURL(file)
+         setSelectedImage(url)
+         console.log('File processed:', {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            previewUrl: url
+         })
+      }
    }
 
    const [loading, setLoading] = React.useState(true)
@@ -170,15 +241,7 @@ const BrandVerification: React.FC = () => {
                   </CardHeader>
                   <CardContent>
                      <div className="grid md:grid-cols-2 gap-8">
-                        <Dropzone
-                           onDropFiles={(files) => {
-                              if (files.length > 0 && files[0] instanceof Blob) {
-                                 const url = URL.createObjectURL(files[0])
-                                 setSelectedImage(url)
-                                 return () => URL.revokeObjectURL(url)
-                              }
-                           }}
-                        />
+                        <Dropzone onDropFiles={handleDropFiles} />
 
                         <div className="flex flex-col space-y-4">
                            <div>
