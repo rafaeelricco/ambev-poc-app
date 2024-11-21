@@ -66,17 +66,17 @@ const initialTimelineData: TimelineData[] = [
       },
       micro: [
          {
-            label: 'Processando algoritmos de similaridade fonética e visual...',
+            label: 'Processando algoritmos de similaridade fonética e visual',
             type: 'similarity',
             status: 'awaiting'
          },
          {
-            label: 'Executando análise gráfica, fonética e ideológica...',
+            label: 'Executando análise gráfica, fonética e ideológica',
             type: 'analysis',
             status: 'awaiting'
          },
          {
-            label: 'Aplicando métricas de distintividade conforme Art. 124 da LPI...',
+            label: 'Aplicando métricas de distintividade conforme Art. 124 da LPI',
             type: 'legal',
             status: 'awaiting'
          }
@@ -94,17 +94,17 @@ const initialTimelineData: TimelineData[] = [
       },
       micro: [
          {
-            label: 'Analisando colidência em classes correlatas NCL(12)...',
+            label: 'Analisando colidência em classes correlatas NCL(12)',
             type: 'class_check',
             status: 'awaiting'
          },
          {
-            label: 'Consultando base de dados do INPI em tempo real...',
+            label: 'Consultando base de dados do INPI em tempo real',
             type: 'database',
             status: 'awaiting'
          },
          {
-            label: 'Verificando possibilidade de confusão, associação ou diluição...',
+            label: 'Verificando possibilidade de confusão, associação ou diluição',
             type: 'confusion',
             status: 'awaiting'
          }
@@ -122,17 +122,17 @@ const initialTimelineData: TimelineData[] = [
       },
       micro: [
          {
-            label: 'Verificando coexistência com marcas de alto renome...',
+            label: 'Verificando coexistência com marcas de alto renome',
             type: 'highend',
             status: 'awaiting'
          },
          {
-            label: 'Executando verificação de conflitos com indicações geográficas...',
+            label: 'Executando verificação de conflitos com indicações geográficas',
             type: 'geographical',
             status: 'awaiting'
          },
          {
-            label: 'Analisando potencial de confusão junto ao público consumidor...',
+            label: 'Analisando potencial de confusão junto ao público consumidor',
             type: 'consumer',
             status: 'awaiting'
          }
@@ -150,17 +150,17 @@ const initialTimelineData: TimelineData[] = [
       },
       micro: [
          {
-            label: 'Preparando dados para registro em blockchain...',
+            label: 'Preparando dados para registro em blockchain',
             type: 'preparation',
             status: 'awaiting'
          },
          {
-            label: 'Registrando análise na rede blockchain...',
+            label: 'Registrando análise na rede blockchain',
             type: 'registration',
             status: 'awaiting'
          },
          {
-            label: 'Gerando comprovante de registro digital...',
+            label: 'Gerando comprovante de registro digital',
             type: 'receipt',
             status: 'awaiting'
          }
