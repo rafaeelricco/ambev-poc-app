@@ -41,6 +41,7 @@ import { Timeline } from './Timeline/Timeline'
 import { TimelineData } from './Timeline/Typing'
 import { Brand } from './Typing'
 
+import confetti from 'canvas-confetti'
 import BrandAnalysisResults from './brand-analysis-result'
 
 const formatDate = (dateString: string) => {
@@ -365,18 +366,28 @@ const BrandVerification: React.FC = () => {
             b64_image: data.b64_image
          }
 
-         await updateTimelineStage(1, 'awaiting', 5000)
+         await updateTimelineStage(1, 'awaiting', 6000)
 
          // Stage 3: Special Verifications
-         await updateTimelineStage(2, 'awaiting', 4000)
+         await updateTimelineStage(2, 'awaiting', 6000)
 
-         const result = await checkTrademarkSimilarity(payload)
+         const result = await checkTrademarkSimilarity(payload).then(async (res) => {
+            // Stage 4: Blockchain Registration
+            await updateTimelineStage(3, 'awaiting', 3000)
+            return res
+         })
+
          setApiResponse(result)
 
-         // Stage 4: Blockchain Registration
-         await updateTimelineStage(3, 'awaiting', 3000)
-
          await new Promise((resolve) => setTimeout(resolve, 2500))
+
+         // Launch confetti with custom configuration
+         confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#725AC2', '#ECE7FF', '#F5C24C']
+         })
 
          toast.success('Marca verificada com sucesso!', { duration: 10000 })
          setShowResults(true)
