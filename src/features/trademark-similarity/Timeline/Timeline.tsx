@@ -12,10 +12,7 @@ import { cn } from '@/src/lib/utils'
 import Spinner from '@/features/trademark-similarity/Timeline/Loading/Spinner'
 import React from 'react'
 
-const Timeline: React.FC<TimeLineProps> = ({
-   onSupport,
-   timelineData
-}: TimeLineProps) => {
+const Timeline: React.FC<TimeLineProps> = ({ timelineData }: TimeLineProps) => {
    const items_container_ref = React.useRef<HTMLDivElement>(null)
    const refs = React.useRef<(HTMLDivElement | null)[]>([])
 

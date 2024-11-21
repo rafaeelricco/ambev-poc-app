@@ -772,38 +772,6 @@ const BrandVerification: React.FC = () => {
    )
 }
 
-const messages_test = [
-   'Processando algoritmos de similaridade fonética e visual...',
-   'Consultando base de dados do INPI em tempo real...',
-   'Aplicando métricas de distintividade conforme Art. 124 da LPI...',
-   'Analisando colidência em classes correlatas NCL(12)...',
-   'Executando verificação de anterioridade marcária...',
-   'Processando parâmetros de confusão e associação indevida...',
-   'Realizando análise semântica conforme Resolução 248/2019...',
-   'Verificando possibilidade de confusão, associação ou diluição...',
-   'Aplicando jurisprudência do INPI à análise comparativa...',
-   'Avaliando grau de distintividade e força da marca...',
-   'Executando análise gráfica, fonética e ideológica...',
-   'Processando índices de semelhança conforme Manual de Marcas...',
-   'Verificando coexistência com marcas de alto renome...',
-   'Aplicando critérios da Convenção da União de Paris...',
-   'Realizando busca de impedimentos legais Art. 124 a 126...',
-   'Analisando elementos nominativos e figurativos da marca...',
-   'Verificando registros internacionais via Protocolo de Madri...',
-   'Processando análise de distintividade conforme Art. 122 da LPI...',
-   'Consultando base de marcas notoriamente conhecidas...',
-   'Aplicando algoritmos de decomposição fonética NCL(12)...',
-   'Verificando registros de marca em segmentos mercadológicos afins...',
-   'Analisando potencial de confusão junto ao público consumidor...',
-   'Processando métricas de similaridade conforme Resolução 249/2019...',
-   'Executando verificação de conflitos com indicações geográficas...',
-   'Realizando análise de colidência em mercados relacionados...',
-   'Aplicando inteligência artificial para análise preditiva...',
-   'Consolidando resultados da verificação completa...',
-   'Gerando relatório detalhado de similaridade...',
-   'Registrando resultado da análise em blockchain...'
-]
-
 const trademarkVerificationSchema = z.object({
    business_name: z.string().min(1, {
       message: 'O nome da marca é obrigatório'

@@ -25,7 +25,6 @@ export type TimelineDataArray = TimelineData[]
 
 type TimeLineProps = {
    timelineData?: TimelineData[]
-   onSupport?: () => void
 }
 
 export type Status =

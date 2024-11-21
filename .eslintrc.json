@@ -3,6 +3,7 @@
    "rules": {
       "@typescript-eslint/no-explicit-any": "off",
       "jsx-a11y/alt-text": "off",
-      "@next/next/no-img-element": "off"
+      "@next/next/no-img-element": "off",
+      "prefer-const": "off"
    }
 }
