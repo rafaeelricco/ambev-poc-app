@@ -11,11 +11,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Dropzone } from '@/components/ui/dropzone'
 import {
-   Form,
-   FormControl,
-   FormField,
-   FormItem,
-   FormMessage
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -23,17 +23,17 @@ import { checkTrademarkSimilarity } from '@/features/trademark-similarity/api/tr
 import { TrademarkSimilarityResponse } from '@/src/types/trademark-similarity'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
-   AlertCircle,
-   AlertTriangle,
-   Bell,
-   CheckCircle,
-   Edit,
-   Eye,
-   PlusCircle,
-   Settings,
-   Trash2,
-   User,
-   X
+    AlertCircle,
+    AlertTriangle,
+    Bell,
+    CheckCircle,
+    Edit,
+    Eye,
+    PlusCircle,
+    Settings,
+    Trash2,
+    User,
+    X
 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -421,6 +421,8 @@ const BrandVerification: React.FC = () => {
 
          console.error('Verification failed:', error)
          toast.error('Erro ao verificar a marca')
+
+         setTimelineData(initialTimelineData)
       } finally {
          setIsModalOpen(false)
       }
