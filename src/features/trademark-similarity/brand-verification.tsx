@@ -247,8 +247,13 @@ const BrandVerification: React.FC = () => {
       )
    }
 
-   const updateTimelineStage = (
+   const getRandomDelay = (min: number, max: number) => {
+      return Math.floor(Math.random() * (max - min + 1) + min)
+   }
+
+   const updateMicroStep = (
       stageIndex: number,
+      microIndex: number,
       status: 'success' | 'awaiting' | 'error'
    ) => {
       setTimelineData((prev) =>
@@ -256,15 +261,9 @@ const BrandVerification: React.FC = () => {
             if (index === stageIndex) {
                return {
                   ...stage,
-                  macro: {
-                     ...stage.macro,
-                     status,
-                     completed: status === 'success',
-                     in_progress: status === 'awaiting'
-                  },
-                  micro: stage.micro.map((item) => ({
+                  micro: stage.micro.map((item, mIndex) => ({
                      ...item,
-                     status
+                     status: mIndex === microIndex ? status : item.status
                   }))
                }
             }
@@ -273,37 +272,100 @@ const BrandVerification: React.FC = () => {
       )
    }
 
+   const updateTimelineStage = async (
+      stageIndex: number,
+      status: 'success' | 'awaiting' | 'error',
+      totalTime: number = 5000
+   ) => {
+      // Set initial state
+      setTimelineData((prev) =>
+         prev.map((stage, index) => {
+            if (index === stageIndex) {
+               return {
+                  ...stage,
+                  macro: {
+                     ...stage.macro,
+                     status,
+                     completed: false,
+                     in_progress: status === 'awaiting'
+                  },
+                  micro: stage.micro.map((item) => ({
+                     ...item,
+                     status: 'awaiting'
+                  }))
+               }
+            }
+            return stage
+         })
+      )
+
+      // Process micro steps
+      if (status === 'awaiting') {
+         const stage = timelineData[stageIndex]
+         const microSteps = stage.micro.length
+         const microDelays: number[] = []
+
+         // Generate random delays that sum up to totalTime
+         let remainingTime = totalTime
+         for (let i = 0; i < microSteps - 1; i++) {
+            const maxDelay = remainingTime - (microSteps - i - 1) * 500 // Ensure minimum 500ms for remaining steps
+            const delay = getRandomDelay(500, maxDelay)
+            microDelays.push(delay)
+            remainingTime -= delay
+         }
+         microDelays.push(remainingTime)
+
+         // Process each micro step
+         for (let i = 0; i < microSteps; i++) {
+            await new Promise((resolve) => setTimeout(resolve, microDelays[i]))
+            updateMicroStep(stageIndex, i, 'success')
+         }
+
+         // Update macro status after all micro steps are complete
+         setTimelineData((prev) =>
+            prev.map((stage, index) => {
+               if (index === stageIndex) {
+                  return {
+                     ...stage,
+                     macro: {
+                        ...stage.macro,
+                        status: 'success',
+                        completed: true,
+                        in_progress: false
+                     }
+                  }
+               }
+               return stage
+            })
+         )
+      }
+   }
+
    async function onSubmit(data: TrademarkVerificationForm) {
       try {
          setIsModalOpen(true)
          setShowResults(false)
 
          // Stage 1: Initial Analysis
-         updateTimelineStage(0, 'awaiting')
-         await new Promise((resolve) => setTimeout(resolve, 5000))
-         updateTimelineStage(0, 'success')
+         await updateTimelineStage(0, 'awaiting', 5000)
 
          // Stage 2: Collision Analysis
-         updateTimelineStage(1, 'awaiting')
          const payload = {
             business_name: data.business_name,
             business_ncl_classes: data.business_ncl_classes,
             b64_image: data.b64_image
          }
-         await new Promise((resolve) => setTimeout(resolve, 5000))
-         updateTimelineStage(1, 'success')
+         await updateTimelineStage(1, 'awaiting', 5000)
 
          // Stage 3: Special Verifications
-         updateTimelineStage(2, 'awaiting')
+         await updateTimelineStage(2, 'awaiting', 5000)
          const result = await checkTrademarkSimilarity(payload)
          setApiResponse(result)
-         await new Promise((resolve) => setTimeout(resolve, 5000))
-         updateTimelineStage(2, 'success')
 
          // Stage 4: Blockchain Registration
-         updateTimelineStage(3, 'awaiting')
-         updateTimelineStage(3, 'success')
-         await new Promise((resolve) => setTimeout(resolve, 3000))
+         await updateTimelineStage(3, 'awaiting', 3000)
+
+         await new Promise((resolve) => setTimeout(resolve, 2000))
 
          toast.success('Marca verificada com sucesso!', { duration: 10000 })
          setShowResults(true)
