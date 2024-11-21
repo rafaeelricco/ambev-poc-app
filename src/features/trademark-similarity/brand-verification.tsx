@@ -43,6 +43,15 @@ import { Brand } from './Typing'
 
 import BrandAnalysisResults from './brand-analysis-result'
 
+const formatDate = (dateString: string) => {
+   const date = new Date(dateString)
+   return date.toLocaleDateString('pt-BR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+   })
+}
+
 const initialTimelineData: TimelineData[] = [
    {
       macro: {
@@ -355,23 +364,26 @@ const BrandVerification: React.FC = () => {
             business_ncl_classes: data.business_ncl_classes,
             b64_image: data.b64_image
          }
+
          await updateTimelineStage(1, 'awaiting', 5000)
 
          // Stage 3: Special Verifications
-         await updateTimelineStage(2, 'awaiting', 5000)
+         await updateTimelineStage(2, 'awaiting', 4000)
+
          const result = await checkTrademarkSimilarity(payload)
          setApiResponse(result)
 
          // Stage 4: Blockchain Registration
          await updateTimelineStage(3, 'awaiting', 3000)
 
-         await new Promise((resolve) => setTimeout(resolve, 2000))
+         await new Promise((resolve) => setTimeout(resolve, 2500))
 
          toast.success('Marca verificada com sucesso!', { duration: 10000 })
          setShowResults(true)
          form.reset()
          setSelectedImage(null)
          setTimelineData(initialTimelineData)
+         setFiles([])
       } catch (error) {
          // Update current stage to error
          const currentStage = timelineData.findIndex(
@@ -452,6 +464,7 @@ const BrandVerification: React.FC = () => {
       }
    }, [selectedImage])
 
+   const [files, setFiles] = React.useState<File[]>([])
    return (
       <React.Fragment>
          <div className="min-h-screen bg-[#F3FCFF]">
@@ -490,7 +503,11 @@ const BrandVerification: React.FC = () => {
                   </CardHeader>
                   <CardContent>
                      <div className="grid md:grid-cols-2 gap-8">
-                        <Dropzone onDropFiles={handleDropFiles} />
+                        <Dropzone
+                           files={files}
+                           setFiles={(files) => setFiles(files)}
+                           onDropFiles={handleDropFiles}
+                        />
                         <Form {...form}>
                            <form
                               onSubmit={form.handleSubmit(onSubmit)}
@@ -641,9 +658,7 @@ const BrandVerification: React.FC = () => {
                                           </div>
                                        </td>
                                        <td className="px-4 py-3 text-gray-600">
-                                          {new Date(
-                                             brand.lastCheck
-                                          ).toLocaleDateString()}
+                                          {formatDate(brand.lastCheck)}
                                        </td>
                                        <td className="px-4 py-3">
                                           <div className="flex justify-end space-x-2">
@@ -710,9 +725,7 @@ const BrandVerification: React.FC = () => {
                                           Última verificação:
                                        </span>
                                        <span className="text-sm">
-                                          {new Date(
-                                             brand.lastCheck
-                                          ).toLocaleDateString()}
+                                          {formatDate(brand.lastCheck)}
                                        </span>
                                     </div>
                                  </div>
@@ -729,6 +742,8 @@ const BrandVerification: React.FC = () => {
             onOpenChange={(open) => {
                setIsModalOpen(open)
                setTimelineData(initialTimelineData)
+               setFiles([])
+               form.reset()
             }}
          >
             <DialogContent>
@@ -751,6 +766,8 @@ const BrandVerification: React.FC = () => {
             onOpenChange={(open) => {
                setShowResults(open)
                setTimelineData(initialTimelineData)
+               setFiles([])
+               form.reset()
             }}
          >
             <DialogContent>

@@ -6,11 +6,11 @@ import { useDropzone } from 'react-dropzone'
 import React from 'react'
 
 const Dropzone: React.FC<DropzoneProps> = ({
+   files,
+   setFiles,
    maxSize,
    onDropFiles
 }: DropzoneProps) => {
-   const [files, setFiles] = React.useState<File[]>([])
-
    const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
       useDropzone({
          multiple: false,
@@ -96,6 +96,8 @@ const formatSize = (size: number): string => {
 }
 
 type DropzoneProps = {
+   files: File[]
+   setFiles: (files: File[]) => void
    maxSize?: number
    onDropFiles: (files: File[]) => void
 }
