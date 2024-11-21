@@ -412,7 +412,7 @@ const BrandVerification: React.FC = () => {
                         </div>
                         <div className="hidden md:block">
                            <p className="text-sm font-medium text-[#2F2F2F]">
-                              John Doe
+                              Caroline Nunes
                            </p>
                            <p className="text-xs text-[#9D9D9D]">Administrador</p>
                         </div>
@@ -735,7 +735,11 @@ const messages_test = [
    'Analisando potencial de confusão junto ao público consumidor...',
    'Processando métricas de similaridade conforme Resolução 249/2019...',
    'Executando verificação de conflitos com indicações geográficas...',
-   'Realizando análise de colidência em mercados relacionados...'
+   'Realizando análise de colidência em mercados relacionados...',
+   'Aplicando inteligência artificial para análise preditiva...',
+   'Consolidando resultados da verificação completa...',
+   'Gerando relatório detalhado de similaridade...',
+   'Registrando resultado da análise em blockchain...'
 ]
 
 const trademarkVerificationSchema = z.object({
