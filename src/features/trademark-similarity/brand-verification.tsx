@@ -37,22 +37,126 @@ import {
 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { Timeline } from './Timeline/Timeline'
+import { TimelineData } from './Timeline/Typing'
+import { Brand } from './Typing'
 
-import LoadingAnimation from '@/features/trademark-similarity/components/loading-animation'
 import BrandAnalysisResults from './brand-analysis-result'
 
-interface Brand {
-   id: number
-   name: string
-   type: 'Nominativa' | 'Mista' | 'Figurativa'
-   status: 'healthy' | 'similar' | 'identical'
-   lastCheck: string
-   processNumber: string
-   validUntil: string
-   specialStatus?: string
-   nclClass: string
-   conflicts: string[]
-}
+const initialTimelineData: TimelineData[] = [
+   {
+      macro: {
+         index: 0,
+         label: 'Análise Inicial',
+         status: 'awaiting',
+         url: null,
+         type: 'init',
+         completed: false,
+         in_progress: false
+      },
+      micro: [
+         {
+            label: 'Processando algoritmos de similaridade fonética e visual...',
+            type: 'similarity',
+            status: 'awaiting'
+         },
+         {
+            label: 'Executando análise gráfica, fonética e ideológica...',
+            type: 'analysis',
+            status: 'awaiting'
+         },
+         {
+            label: 'Aplicando métricas de distintividade conforme Art. 124 da LPI...',
+            type: 'legal',
+            status: 'awaiting'
+         }
+      ]
+   },
+   {
+      macro: {
+         index: 1,
+         label: 'Análise de Colidência',
+         status: 'awaiting',
+         url: null,
+         type: 'collision',
+         completed: false,
+         in_progress: false
+      },
+      micro: [
+         {
+            label: 'Analisando colidência em classes correlatas NCL(12)...',
+            type: 'class_check',
+            status: 'awaiting'
+         },
+         {
+            label: 'Consultando base de dados do INPI em tempo real...',
+            type: 'database',
+            status: 'awaiting'
+         },
+         {
+            label: 'Verificando possibilidade de confusão, associação ou diluição...',
+            type: 'confusion',
+            status: 'awaiting'
+         }
+      ]
+   },
+   {
+      macro: {
+         index: 2,
+         label: 'Verificações Especiais',
+         status: 'awaiting',
+         url: null,
+         type: 'special',
+         completed: false,
+         in_progress: false
+      },
+      micro: [
+         {
+            label: 'Verificando coexistência com marcas de alto renome...',
+            type: 'highend',
+            status: 'awaiting'
+         },
+         {
+            label: 'Executando verificação de conflitos com indicações geográficas...',
+            type: 'geographical',
+            status: 'awaiting'
+         },
+         {
+            label: 'Analisando potencial de confusão junto ao público consumidor...',
+            type: 'consumer',
+            status: 'awaiting'
+         }
+      ]
+   },
+   {
+      macro: {
+         index: 3,
+         label: 'Registro Blockchain',
+         status: 'awaiting',
+         url: 'https://busca.inpi.gov.br/result',
+         type: 'blockchain',
+         completed: false,
+         in_progress: false
+      },
+      micro: [
+         {
+            label: 'Preparando dados para registro em blockchain...',
+            type: 'preparation',
+            status: 'awaiting'
+         },
+         {
+            label: 'Registrando análise na rede blockchain...',
+            type: 'registration',
+            status: 'awaiting'
+         },
+         {
+            label: 'Gerando comprovante de registro digital...',
+            type: 'receipt',
+            status: 'awaiting'
+         }
+      ]
+   }
+]
 
 const BrandVerification: React.FC = () => {
    const [isModalOpen, setIsModalOpen] = React.useState(false)
@@ -62,18 +166,6 @@ const BrandVerification: React.FC = () => {
    const [apiResponse, setApiResponse] =
       React.useState<TrademarkSimilarityResponse | null>(null)
    const [brands] = React.useState<Brand[]>([
-      //   {
-      //      id: 1,
-      //      name: 'BRAHMA',
-      //      type: 'Nominativa',
-      //      status: 'healthy',
-      //      lastCheck: '2024-03-19',
-      //      processNumber: '002208504',
-      //      validUntil: '2028-12-28',
-      //      specialStatus: 'Marca de Alto Renome (válido até 28/03/2027)',
-      //      nclClass: '32',
-      //      conflicts: []
-      //   },
       {
          id: 2,
          name: 'BRAHMA',
@@ -108,6 +200,8 @@ const BrandVerification: React.FC = () => {
          conflicts: []
       }
    ])
+   const [timelineData, setTimelineData] =
+      React.useState<TimelineData[]>(initialTimelineData)
 
    const form = useForm<TrademarkVerificationForm>({
       resolver: zodResolver(trademarkVerificationSchema),
@@ -153,52 +247,81 @@ const BrandVerification: React.FC = () => {
       )
    }
 
+   const updateTimelineStage = (
+      stageIndex: number,
+      status: 'success' | 'awaiting' | 'error'
+   ) => {
+      setTimelineData((prev) =>
+         prev.map((stage, index) => {
+            if (index === stageIndex) {
+               return {
+                  ...stage,
+                  macro: {
+                     ...stage.macro,
+                     status,
+                     completed: status === 'success',
+                     in_progress: status === 'awaiting'
+                  },
+                  micro: stage.micro.map((item) => ({
+                     ...item,
+                     status
+                  }))
+               }
+            }
+            return stage
+         })
+      )
+   }
+
    async function onSubmit(data: TrademarkVerificationForm) {
       try {
-         console.log('Starting trademark verification process...')
          setIsModalOpen(true)
          setShowResults(false)
 
-         console.log(
-            'Form data:',
-            JSON.stringify(
-               {
-                  business_name: data.business_name,
-                  business_ncl_classes: data.business_ncl_classes,
-                  imageSize: data.b64_image?.length
-               },
-               null,
-               2
-            )
-         )
+         // Stage 1: Initial Analysis
+         updateTimelineStage(0, 'awaiting')
+         await new Promise((resolve) => setTimeout(resolve, 5000))
+         updateTimelineStage(0, 'success')
 
+         // Stage 2: Collision Analysis
+         updateTimelineStage(1, 'awaiting')
          const payload = {
             business_name: data.business_name,
             business_ncl_classes: data.business_ncl_classes,
             b64_image: data.b64_image
          }
+         await new Promise((resolve) => setTimeout(resolve, 5000))
+         updateTimelineStage(1, 'success')
 
-         console.log('Sending request to API:', JSON.stringify(payload, null, 2))
+         // Stage 3: Special Verifications
+         updateTimelineStage(2, 'awaiting')
          const result = await checkTrademarkSimilarity(payload)
-         console.log('API Response:', JSON.stringify(result, null, 2))
-
          setApiResponse(result)
+         await new Promise((resolve) => setTimeout(resolve, 5000))
+         updateTimelineStage(2, 'success')
 
-         // Handle success
+         // Stage 4: Blockchain Registration
+         updateTimelineStage(3, 'awaiting')
+         updateTimelineStage(3, 'success')
+         await new Promise((resolve) => setTimeout(resolve, 3000))
+
          toast.success('Marca verificada com sucesso!', { duration: 10000 })
          setShowResults(true)
-
-         console.log('Verification completed successfully')
-         // Reset the form
          form.reset()
          setSelectedImage(null)
+         setTimelineData(initialTimelineData)
       } catch (error) {
+         // Update current stage to error
+         const currentStage = timelineData.findIndex(
+            (stage) => stage.macro.status === 'awaiting' || stage.macro.in_progress
+         )
+         if (currentStage !== -1) {
+            updateTimelineStage(currentStage, 'error')
+         }
+
          console.error('Verification failed:', error)
-         console.error('Error details:', error)
-         // Handle error
          toast.error('Erro ao verificar a marca')
       } finally {
-         console.log('Cleaning up verification process...')
          setIsModalOpen(false)
       }
    }
@@ -539,15 +662,35 @@ const BrandVerification: React.FC = () => {
                </Card>
             </main>
          </div>
-         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+         <Dialog
+            open={isModalOpen}
+            onOpenChange={(open) => {
+               setIsModalOpen(open)
+               setTimelineData(initialTimelineData)
+            }}
+         >
             <DialogContent>
-               <DialogTitle className="text-2xl font-semibold">
-                  Verificando marca
-               </DialogTitle>
-               <LoadingAnimation messages={messages_test} duration={30000} />
+               <div className="flex items-center justify-between">
+                  <DialogTitle className="text-2xl font-semibold">
+                     Verificando marca
+                  </DialogTitle>
+                  <DialogPrimitive.Close className="rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 disabled:pointer-events-none">
+                     <X className="h-6 w-6" />
+                     <span className="sr-only">Close</span>
+                  </DialogPrimitive.Close>
+               </div>
+               <div>
+                  <Timeline timelineData={timelineData} />
+               </div>
             </DialogContent>
          </Dialog>
-         <Dialog open={showResults} onOpenChange={setShowResults}>
+         <Dialog
+            open={showResults}
+            onOpenChange={(open) => {
+               setShowResults(open)
+               setTimelineData(initialTimelineData)
+            }}
+         >
             <DialogContent>
                <div className="flex items-center justify-between">
                   <DialogTitle className="text-2xl font-semibold">
