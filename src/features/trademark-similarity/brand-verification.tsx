@@ -357,7 +357,7 @@ const BrandVerification: React.FC = () => {
          setShowResults(false)
 
          // Stage 1: Initial Analysis
-         await updateTimelineStage(0, 'awaiting', 5000)
+         await updateTimelineStage(0, 'awaiting', 12000)
 
          // Stage 2: Collision Analysis
          const payload = {
@@ -366,10 +366,10 @@ const BrandVerification: React.FC = () => {
             b64_image: data.b64_image
          }
 
-         await updateTimelineStage(1, 'awaiting', 6000)
+         await updateTimelineStage(1, 'awaiting', 12000)
 
          // Stage 3: Special Verifications
-         await updateTimelineStage(2, 'awaiting', 6000)
+         await updateTimelineStage(2, 'awaiting', 12000)
 
          const result = await checkTrademarkSimilarity(payload).then(async (res) => {
             // Stage 4: Blockchain Registration
@@ -381,7 +381,6 @@ const BrandVerification: React.FC = () => {
 
          await new Promise((resolve) => setTimeout(resolve, 2500))
 
-         // Launch confetti with custom configuration
          confetti({
             particleCount: 100,
             spread: 70,
