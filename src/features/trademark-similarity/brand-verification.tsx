@@ -366,18 +366,34 @@ const BrandVerification: React.FC = () => {
             b64_image: data.b64_image
          }
 
-         await updateTimelineStage(1, 'awaiting', 12000)
+         await updateTimelineStage(1, 'awaiting', 16000)
 
          // Stage 3: Special Verifications
-         await updateTimelineStage(2, 'awaiting', 12000)
+         await updateTimelineStage(2, 'awaiting', 18000)
 
-         const result = await checkTrademarkSimilarity(payload).then(async (res) => {
-            // Stage 4: Blockchain Registration
-            await updateTimelineStage(3, 'awaiting', 3000)
-            return res
-         })
+         // Iniciar Stage 4 (Blockchain) mas não aguardar conclusão ainda
+         setTimelineData((prev) =>
+            prev.map((stage, index) => {
+               if (index === 3) {
+                  return {
+                     ...stage,
+                     macro: {
+                        ...stage.macro,
+                        status: 'awaiting',
+                        completed: false,
+                        in_progress: true
+                     }
+                  }
+               }
+               return stage
+            })
+         )
 
+         const result = await checkTrademarkSimilarity(payload)
          setApiResponse(result)
+
+         // Agora sim, conclui o Stage 4 (Blockchain)
+         await updateTimelineStage(3, 'awaiting', 3000)
 
          await new Promise((resolve) => setTimeout(resolve, 2500))
 
